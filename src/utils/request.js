@@ -26,6 +26,7 @@ service.interceptors.request.use(
         if (user_id) {
             config.headers['UserId'] = user_id;
         }
+        config.headers['VenuesID'] = window.venues;
         return config;
     },
     error => {
@@ -60,7 +61,7 @@ service.interceptors.response.use(
         }
     },
     error => {
-        console.log(error.response)
+        console.log(error)
         if (error.response && error.response.status == 500) {
             let res = error.response.data;
             /* 
@@ -70,7 +71,7 @@ service.interceptors.response.use(
              */
             if (res.code === 401) {
                 Notify({
-                    message: "登录已经失效，请重新登录" || 'Error',
+                    message: "请先登录" || 'Error',
                     type: 'danger',
                     duration: 5 * 1000
                 });

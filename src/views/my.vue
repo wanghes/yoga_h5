@@ -2,9 +2,9 @@
     <div class="wrap">
         <div class='top_info'>
             <div class="user">
-                <img v-if="user.head" :src="user.head" alt="">
-                <img v-else :src="head" alt="">
-                <span>{{user.name}}</span>
+                <img @click="toPerson" class="avatar" v-if="user.head" :src="user.head" alt="">
+                <img @click="toPerson" class="avatar" v-else :src="head" alt="">
+                <span @click="toPerson">{{user.name}}</span>
                 <span class="tuichu" @click="logout">退出</span>
             </div>
             <div class="f_in">
@@ -289,6 +289,11 @@ export default {
             }
             return val;
         },
+        toPerson() {
+            this.$router.push({
+                path: "/person"
+            });
+        },
         jump(num) {
             if (num == 1) {
                 this.$router.replace({
@@ -354,6 +359,11 @@ export default {
             background-color: #fff;
             border-radius: 50%;
             margin-right: 20px;
+            border:1px solid #fff;
+        }
+        .avatar{
+            width:70px;
+            height: 70px;
         }
         span{
             font-size: 20px;

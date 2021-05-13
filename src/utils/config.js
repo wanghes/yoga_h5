@@ -1,4 +1,4 @@
-const developmentUrl = "http://yadmin.com";
+const developmentUrl = "http://venues.yoga.com";
 const productionUrl = "http://api.yogaguanjia.com";
 const imgUploadUrl= "http://assets.yoga.com";
 const productionImgUploadUrl= "http://source.yogaguanjia.com";

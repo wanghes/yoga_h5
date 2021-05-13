@@ -17,6 +17,18 @@ export const constantRoutes = [
         component: () => import('@/views/login')
     },
     {
+        path: '/register',
+        component: () => import('@/views/register')
+    },
+    {
+        path: '/forget',
+        component: () => import('@/views/fixpass')
+    },
+    {
+        path: '/findOk',
+        component: () => import('@/views/fixPassSuccess')
+    },
+    {
         path: '/',
         component: () => import('@/views/home')
     },
@@ -37,12 +49,36 @@ export const constantRoutes = [
         component: () => import('@/views/my')
     },
     {
+        path: '/person',
+        component: () => import('@/views/person')
+    },
+    {
         path: "/my_cards",
         component: () => import('@/views/my_cards')
     },
     {
         path: "/detail",
         component: () => import('@/views/detail')
+    },
+    {
+        path: "/online/index",
+        component: () => import('@/views/online/index')
+    },
+    {
+        path: "/online/series",
+        component: () => import('@/views/online/series')
+    },
+    {
+        path: "/online/alones",
+        component: () => import('@/views/online/alones')
+    },
+    {
+        path: "/online/alones_detail/:id",
+        component: () => import('@/views/online/alones_detail')
+    },
+    {
+        path: "/online/series_detail/:id",
+        component: () => import('@/views/online/series_detail')
     }
 ];
 

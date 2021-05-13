@@ -1,56 +1,30 @@
 <template>
     <div class="wrap login_box">
-        
         <div class="top">
             <img class="close" @click="toHome" :src="close" alt="">
         </div>
-        <h3 class="title">手机帐号登录</h3>
-        <div class="tab_menu">
-            <span @click="tabClick(1)" :class="tab_01_show ? 'active': ''">密码登录</span>
-            <span @click="tabClick(2)" :class="tab_02_show ? 'active': ''">短信登录</span>
-        </div>
-
+        <h3 class="title">修改密码</h3>
         <div class="tab_content">
-            <div v-if="tab_01_show" class="tab_01">
-                <div class="form">
-                    <div class="form_item">
-                        <span class="pre">+86 ></span>
-                        <input v-model="phone" placeholder="请填写用户手机" type="text"/>
-                    </div>
-                    <div class="form_item">
-                        <input v-model="password" placeholder="请填写密码" type="password"/>
-                    </div>
-                    <div style="margin-top: 50px">
-                        <van-button round block type="info" @click="onSubmit" native-type="submit">提交</van-button>
-                    </div>
+            <div class="form">
+                <div class="form_item">
+                    <span class="pre">+86 ></span>
+                    <input v-model="phone" placeholder="请填写用户手机" type="text"/>
                 </div>
-            </div>
-            <div v-if="tab_02_show" class="tab_02">
-                <div class="form">
-                    <div class="form_item">
-                        <span class="pre">+86 ></span>
-                        <input v-model="phone" placeholder="请填写用户手机" type="text"/>
-                    </div>
-                    <div class="form_item">
-                        <input v-model="vcode" placeholder="请输入验证码" type="text"/>
-                        <span class="last" @click="fetchVcode">获取验证码</span>
-                    </div>
-                    <div style="margin-top: 50px">
-                        <van-button round block type="info" @click="smsSubmit" native-type="submit">提交</van-button>
-                    </div>
+                <div class="form_item">
+                    <input v-model="vcode" placeholder="请输入验证码" type="text"/>
+                    <span class="last" @click="fetchVcode">获取验证码</span>
+                </div>
+                <div class="form_item">
+                    <input v-model="password" placeholder="设定新密码(6位或以上）" type="password"/>
+                </div>
+                <div style="margin-top: 50px">
+                    <van-button round block type="info" @click="onSubmit" native-type="submit">提 交</van-button>
                 </div>
             </div>
         </div>
-
-        <div class="bot_f" v-if="tab_01_show">
-            <span @click="toForget">忘记密码</span>
+        <div class="bot_f">
             <span @click="toRegister">立即注册</span>
         </div>
-
-        <div class="bot_f" v-if="tab_02_show">
-            <span @click="toRegister">立即注册</span>
-        </div>
-    
     </div>
 </template>
 
@@ -62,13 +36,11 @@ const user = require("@/api/user");
 export default {
     data() {
         return {
-            phone: "",
+            phone: "15810849752",
             password: "",
             vcode: "",
-            close,
             verification_key: "",
-            tab_01_show: true,
-            tab_02_show: false
+            close
         };
     },
     mounted() {
@@ -77,57 +49,28 @@ export default {
     methods: {
         async onSubmit() {
             const phone = this.phone;
+            const vcode = this.vcode;
+            const verification_key = this.verification_key;
             const password = this.password;
-        
-            let res = await user.login({
+    
+            let res = await user.editPassword({
                 phone,
-                password
+                password,
+                vcode,
+                verification_key,
             });
 
-            if (res.code == 200) {
-                let data = res.data;
-                cookie.set('user_id', data.user_id);
-                cookie.set('user_token', data.token);
-                cookie.set('user_phone', data.phone);
-                cookie.set('user_head', data.head);
+            return;
 
+            if (res.code == 200) {
                 this.$router.push({
-                    path: "/"
+                    path: "/findOk"
                 });
             }
         },
-        async smsSubmit() {
-            const phone = this.phone;
-            const vcode = this.vcode;
-            const verification_key = this.verification_key;
-
-            let res = await user.smsLogin({
-                phone,
-                vcode,
-                verification_key
-            });
-
-            if (res.code == 200) {
-                let data = res.data;
-                cookie.set('user_id', data.user_id);
-                cookie.set('user_token', data.token);
-                cookie.set('user_phone', data.phone);
-                cookie.set('user_head', data.head);
-
-                this.$router.push({
-                    path: "/"
-                });
-            }
-
-        },  
         toHome() {
             this.$router.replace({
                 path: "/"
-            })
-        },
-        toForget() {
-            this.$router.push({
-                path: "/forget"
             })
         },
         async fetchVcode() {
@@ -145,15 +88,6 @@ export default {
             if (res.code == 200) {
                 cookie.set('verification_key', res.data.verification_key);
                 this.verification_key = res.data.verification_key 
-            }
-        },
-        tabClick(index) {
-            if (index == 1) {
-                this.tab_01_show = true;
-                this.tab_02_show = false;
-            } else {
-                this.tab_01_show = false;
-                this.tab_02_show = true;
             }
         },
         toRegister() {

@@ -1,11 +1,8 @@
 <template>
     <div class="wrap home">
         <van-swipe class="my-swipe" :autoplay="5000" indicator-color="white">
-            <van-swipe-item>
-                <img v-lazy="banner_01" alt="">
-            </van-swipe-item>
-            <van-swipe-item>
-                <img v-lazy="banner_02" alt="">
+            <van-swipe-item v-for="item in focuses" @click="openLink(item)" :key="item.id">
+                <img v-lazy="item.pic" alt="" >
             </van-swipe-item>
         </van-swipe>
         <div class="wrap_inner">
@@ -29,19 +26,19 @@
                     </div>
                 </div>
                 <div class="items">
-                    <div class="item" @click="jump(4)">
+                    <div class="item" @click="jump(5)">
                         <img :src="btns.btn_05" alt="">
                         <span>视频课程</span>
                     </div>
-                    <div class="item" @click="jump(21)">
+                    <div class="item" @click="jump(6)">
                         <img :src="btns.btn_06" alt="">
                         <span>限时秒杀</span>
                     </div>
-                    <div class="item" @click="jump(22)">
+                    <div class="item" @click="jump(7)">
                         <img :src="btns.btn_07" alt="">
                         <span>拼团活动</span>
                     </div>
-                    <div class="item" @click="jump(22)">
+                    <div class="item" @click="jump(8)">
                         <img :src="btns.btn_08" alt="">
                         <span>出廓商城</span>
                     </div>
@@ -54,14 +51,13 @@
                     <strong>场馆介绍</strong>
                 </div>
                 <div class="img_guan">
-                    <img :src="guan" alt="">
+                    <img :src="venues.cover" alt="">
                 </div>
                 <div class="infos">
-                    <div class="name">北京 瑜老师瑜伽馆</div>
-
+                    <div class="name">{{venues.name}}</div>
                     <div class="zhu">
                         <span class="yin">营业时间</span>
-                        <span>周一至周日 09:00-21:00</span>
+                        <span>{{venues.time}}</span>
                     </div>
                 </div>
                 <van-divider />
@@ -69,32 +65,11 @@
                     <span>环境设施</span>
                 </div>
                 <van-row>
-                    <van-col span="8" class="sevs_item">
-                        <img :src="sevs.s_01" alt="">
-                        <span>沙发座</span>
-                    </van-col>
-                    <van-col span="8" class="sevs_item">
-                        <img :src="sevs.s_02" alt="">
-                        <span>免费WIFI</span>
-                    </van-col>
-                    <van-col span="8" class="sevs_item">
-                        <img :src="sevs.s_03" alt="">
-                        <span>有停车场</span>
-                    </van-col>
-                </van-row>
-                <div class="ge"></div>
-                <van-row>
-                    <van-col span="8" class="sevs_item">
-                        <img :src="sevs.s_04" alt="">
-                        <span>储物柜</span>
-                    </van-col>
-                    <van-col span="8" class="sevs_item">
-                        <img :src="sevs.s_05" alt="">
-                        <span>更衣室</span>
-                    </van-col>
-                    <van-col span="8" class="sevs_item">
-                        <img :src="sevs.s_06" alt="">
-                        <span>淋浴房</span>
+                    <van-col span="8" class="sevs_item" :key="item.id" v-for="item in checkedEnvs">
+                        <div class="inner">
+                            <img :src="item.img" alt="">
+                            <span>{{item.name}}</span>
+                        </div>
                     </van-col>
                 </van-row><van-divider />
                 <div class="s_title">
@@ -102,8 +77,8 @@
                 </div>
                 <div class="jiaotong">
                     <div class="left">
-                        <span class="t_01">中兴投文园金星路24号D座103室</span>
-                        <span>距离公交站公安大学西站200</span>
+                        <span class="t_01">{{venues.adress}}</span>
+                        <span>{{venues.traffic}}</span>
                     </div>
                     <div class="right"></div>
                 </div>
@@ -133,8 +108,11 @@
                 </div>
             </div>
         </div>
-    
-        <div class="support">由 <span>瑜睿科技</span> 提供技术支持 </div>
+        <div class="support_wrap">
+            <div class="support" :style="{'background-image':'url('+join_us+')'}">
+                <img :src="go" alt="">  
+            </div>
+        </div>
         <van-tabbar v-model="active" active-color="#FF5926" @change="onChange" inactive-color="#000">
             <van-tabbar-item icon="home-o">场馆</van-tabbar-item>
             <van-tabbar-item icon="notes-o">课表</van-tabbar-item>
@@ -161,7 +139,11 @@ import s_03 from "@/assets/img/s_03.png"
 import s_04 from "@/assets/img/s_04.png"
 import s_05 from "@/assets/img/s_05.png"
 import s_06 from "@/assets/img/s_06.png"
+import go from "@/assets/img/go.png"
+import join_us from "@/assets/img/join_us.png"
 const teacher = require('@/api/teacher');
+const venues = require('@/api/venues');
+const focus = require('@/api/focus');
 import { cookie } from "@/utils/index"
 import { Toast } from 'vant';
 const teacherHead = require('@/assets/img/teacher.png');
@@ -172,6 +154,8 @@ export default {
             active: 0,
             teacherHead,
             banner_02,
+            join_us,
+            go,
             banner_01,
             btns: {
                 btn_01,
@@ -183,6 +167,38 @@ export default {
                 btn_07,
                 btn_08,
             },
+            envs: [
+                {
+                    id: 1,
+                    name: "沙发座",
+                    img: s_01
+                },
+                {
+                    id: 2,
+                    name: "免费WIFI",
+                    img: s_02
+                },
+                {
+                    id: 3,
+                    name: "有停车场",
+                    img: s_03
+                },
+                {
+                    id: 4,
+                    name: "储物柜",
+                    img: s_04
+                },
+                {
+                    id: 5,
+                    name: "更衣室",
+                    img: s_05
+                },
+                {
+                    id: 6,
+                    name: "淋浴房",
+                    img: s_06
+                }
+            ],
             sevs: {
                 s_01,
                 s_02,
@@ -192,13 +208,26 @@ export default {
                 s_06
             },
             guan,
-            teachers:[]
+            venues:{},
+            teachers:[],
+            checkedEnvs:[],
+            focuses:[]
         }
     },
     mounted(){
-        this.fetchTeacher()
+        this.fetchTeacher();
+        this.fetchVenues();
+        this.fetchPic();
     },
     methods: {
+        async fetchPic() {
+            let res = await focus.list({
+                type: 1
+            })
+            if (res.code == 200) {
+                this.focuses = res.data
+            }
+        },
         async fetchTeacher() {
             Toast.loading({
                 message: '加载中...',
@@ -213,10 +242,29 @@ export default {
             }
             Toast.clear();
         },
+        async fetchVenues() {
+            let res = await venues.query();
+            if (res.code == 200) {
+                this.venues = res.data;
+                this.setCheckedEnvs(res.data.env);
+            }
+        },
+        setCheckedEnvs(env) {
+            if (!env) return;
+            let envIds = env.split(',');
+            var result = envIds.map(function(v) {
+                return parseInt(v)
+            });
+            let inc = this.envs.filter((item) => {
+                return result.includes(item.id);
+            });
+        
+            this.checkedEnvs = inc;
+        },
         jump(val) {
             switch(val) {
                 case 1:
-                    this.$router.replace({
+                    this.$router.push({
                         path: "/tiyan"
                     });
                     break; 
@@ -228,6 +276,11 @@ export default {
                 case 3:
                     this.$router.replace({
                         path: "/book/2"
+                    });
+                    break; 
+                case 5:
+                    this.$router.push({
+                        path: "/online/index"
                     });
                     break; 
                 default:
@@ -285,7 +338,10 @@ export default {
                 });
                 return;
             }
-           
+        },
+        openLink(item){
+            console.log(item)
+            window.open(item.url)
         }
     }
 }
@@ -298,20 +354,21 @@ export default {
 <style lang="less" scoped>
     .home{
         width:100%;
-        min-height: 100vh;
-        // background-image: url('../assets/img/banner_01.png');
-        // background-repeat: no-repeat;
-        // background-size: contain;
-        // padding-top: 300px;
+        position: relative;
     }
     .my-swipe{
+        position: absolute;
+        left:0;
+        top:0;
+        width:100%;
         img{
             width:100%;
         }
     }
     .wrap_inner{
         position: relative;
-        top: -120px;
+        top: 200px;
+        padding-bottom: 200px;
     }
     .btns{
         display: flex;
@@ -392,6 +449,11 @@ export default {
             align-items: center;
             font-size: 14px;
             color: #666;
+            margin-bottom: 10px;
+            .inner{
+                display: flex;
+                align-items: center;
+            }
             img{
                 width: 18px;
                 height: 18px;

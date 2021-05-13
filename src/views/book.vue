@@ -58,7 +58,6 @@
             <van-empty description="还没有数据" />
         </div>
 
-        <div class="support">由 <span>瑜睿科技</span> 提供技术支持 </div>
         <van-tabbar v-model="activeTab" active-color="#FF5926" @change="onChange" inactive-color="#000">
             <van-tabbar-item icon="home-o">场馆</van-tabbar-item>
             <van-tabbar-item icon="notes-o">课表</van-tabbar-item>
