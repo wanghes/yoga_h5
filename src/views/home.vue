@@ -92,7 +92,7 @@
 
                 <div class="box" v-if="teachers.length > 0">
                     <div class="item" v-for="item in teachers" :key="item.id">
-                        <img  v-if="item.head" :src="item.head" alt="">
+                        <img  v-if="item.avatar" :src="item.avatar" alt="">
                         <img  v-else :src="teacherHead" alt="">
                         <div class="inner">
                             <span class="name">{{item.name}}</span>
@@ -281,6 +281,16 @@ export default {
                 case 5:
                     this.$router.push({
                         path: "/online/index"
+                    });
+                    break; 
+                case 6:
+                    this.$router.push({
+                        path: "/miaosha"
+                    });
+                    break; 
+                case 7:
+                    this.$router.push({
+                        path: "/tuangou"
                     });
                     break; 
                 default:

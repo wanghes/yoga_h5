@@ -35,7 +35,7 @@
             </van-tabs>
         </div>
 
-         <div class="btn" v-if="detail.pay_money != 0">
+        <div class="btn" v-if="detail.pay_money != 0">
             <van-button block type="info" @click="sSubmit" native-type="submit">立即抢购</van-button>
         </div>
     </div>

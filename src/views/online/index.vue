@@ -244,6 +244,7 @@ export default {
 	color: #545454;
 	border: none;
 	margin-right: 5px;
+	font-size:14px;
 	border-radius: 3px;
 }
 .list_box .van-tabs__nav--complete {

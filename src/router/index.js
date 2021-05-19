@@ -79,6 +79,30 @@ export const constantRoutes = [
     {
         path: "/online/series_detail/:id",
         component: () => import('@/views/online/series_detail')
+    },
+    {
+        path: "/miaosha",
+        component: () => import('@/views/miaosha/index')
+    },
+    {
+        path: "/miaosha/:id",
+        component: () => import('@/views/miaosha/detail')
+    },
+    {
+        path: "/tuangou",
+        component: () => import('@/views/tuangou/index')
+    },
+    {
+        path: "/tuangou/:id",
+        component: () => import('@/views/tuangou/detail')
+    },
+    {
+        path: "/cards",
+        component: () => import('@/views/cards/index')
+    },
+    {
+        path: "/card/:id",
+        component: () => import('@/views/cards/detail')
     }
 ];
 

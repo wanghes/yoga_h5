@@ -1,7 +1,6 @@
 <template>
     <div class="wrap register_box">
         <div class="top">
-            <img class="close" @click="toLogin" :src="close" alt="">
             <img class="home" @click="toHome" :src="home" alt="">
         </div>
         
@@ -58,7 +57,6 @@
 <script>
 import yoga_register from "@/assets/img/yoga_register.png"
 import home from "@/assets/img/home.png"
-import close from "@/assets/img/close.png"
 import {cookie} from "@/utils/index"
 const adviser = require('@/api/adviser');
 const user = require('@/api/user');
@@ -72,7 +70,6 @@ export default {
             yoga_register,
             home,
             showPicker:false,
-            close,
             adviser_id: "",
             advisers:[],
             adviser_name: "请选择为您服务的顾问（选填）",
@@ -260,10 +257,6 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
     }
     .home{
         width: 18px;
-        height: 16px;
-    }
-    .close{
-        width: 16px;
         height: 16px;
     }
     .theme{

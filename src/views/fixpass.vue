@@ -1,8 +1,5 @@
 <template>
     <div class="wrap login_box">
-        <div class="top">
-            <img class="close" @click="toHome" :src="close" alt="">
-        </div>
         <h3 class="title">修改密码</h3>
         <div class="tab_content">
             <div class="form">
@@ -31,7 +28,6 @@
 
 <script>
 import {cookie} from "@/utils/index"
-import close from "@/assets/img/close.png"
 const user = require("@/api/user");
 export default {
     data() {
@@ -39,8 +35,7 @@ export default {
             phone: "15810849752",
             password: "",
             vcode: "",
-            verification_key: "",
-            close
+            verification_key: ""
         };
     },
     mounted() {
@@ -110,19 +105,9 @@ export default {
     padding: 30px;
     box-sizing: border-box;
     .title{
-        padding-top: 15px;
         text-align: left;
         font-size: 24px;
         font-weight: normal;
-    }
-    .top{
-        display: flex;
-        padding: 0px;
-        justify-content: space-between;
-        .close{
-            width: 16px;
-            height: 16px;
-        }
     }
     .tab_menu{
         font-size: 18px;
