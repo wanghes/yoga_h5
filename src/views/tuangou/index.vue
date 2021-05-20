@@ -2,7 +2,9 @@
     <div class="wrap">
         <div class="list" v-if="list.length > 0">
             <div class="item" v-for="item in list" :key="item.id" @click="jump(item.id)">
-                <img class="left" :src="item.cover" alt="">
+                <div class="left">
+                    <img class="left" :src="item.cover" alt="">
+                </div>
                 <div class="right">
                     <h3>{{item.name}}</h3>
                     <div class="info">{{item.intro}}</div>
@@ -61,14 +63,19 @@ export default {
         padding-top: 15px;
         padding-bottom: 15px;
         border-bottom: 1px solid #efefef;
+        align-items: center;
         .left{
-            width: 30%;
+            width: 40%;
             flex: 1;
-            margin-right: 10px;
+            img{
+                width: 100%;
+            }
         }
         .right{
-            width: 60%;
+            padding-left: 10px;
+            box-sizing: border-box;
             font-size: 14px;
+            width: 60%;
             h3{
                 margin: 0;
                 padding: 0;

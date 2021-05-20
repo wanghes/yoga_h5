@@ -90,13 +90,7 @@
             <van-datetime-picker @cancel="showBirthday = false" @confirm="okData" v-model="currentDate" type="date" title="选择年月日" :min-date="minDate" :max-date="maxDate" :formatter="formatter" />
         </van-popup>
         <van-popup v-model="showAddress" position="bottom">
-            <van-area
-                title="选择地址"
-                :area-list="areaList"
-                :columns-placeholder="['请选择', '请选择', '请选择']"
-                @confirm="confirmArea"
-                @cancel="showAddress = false"
-            />
+            <van-area title="选择地址" :area-list="areaList" :columns-placeholder="['请选择', '请选择', '请选择']" @confirm="confirmArea" @cancel="showAddress = false" />
         </van-popup>
     </div>
 </template>
@@ -105,7 +99,7 @@
 import { cookie, dateFormat } from "@/utils/index";
 const user = require("@/api/user");
 const head = require("@/assets/img/head.png");
-import { areaList } from '@vant/area-data';
+import { areaList } from "@vant/area-data";
 
 export default {
 	data() {
@@ -116,10 +110,10 @@ export default {
 			showBirthday: false,
 			showAddress: false,
 			user: {},
-            areaList,
-            currentDate: new Date(),
-            minDate: new Date(1950, 0, 1),
-            maxDate: new Date(2025, 10, 1),
+			areaList,
+			currentDate: new Date(),
+			minDate: new Date(1950, 0, 1),
+			maxDate: new Date(2025, 10, 1),
 		};
 	},
 	mounted() {
@@ -146,43 +140,37 @@ export default {
 			return val;
 		},
 		async submit() {
-            const {
-                name,
-                sex,
-                birthday,
-                address,
-                id
-            } = this.user;
+			const { name, sex, birthday, address, id } = this.user;
 
-            let res = await user.updateInfo({
-                id,
-                name,
-                sex,
-                birthday,
-                address
-            });
-            
-            if (res.code == 200) {
-                this.$notify({ type: 'success', message: res.msg});
-                setTimeout(() => {
-                    this.$router.push({
-                        path: "/my"
-                    })
-                },1000)
-            }
-        },
-        okData(value) {
-            let day = dateFormat('YYYY-mm-dd', value)
-            this.showBirthday = false;
-            this.user.birthday = day;
-        },
+			let res = await user.updateInfo({
+				id,
+				name,
+				sex,
+				birthday,
+				address,
+			});
+
+			if (res.code == 200) {
+				this.$notify({ type: "success", message: res.msg });
+				setTimeout(() => {
+					this.$router.push({
+						path: "/my",
+					});
+				}, 1000);
+			}
+		},
+		okData(value) {
+			let day = dateFormat("YYYY-mm-dd", value);
+			this.showBirthday = false;
+			this.user.birthday = day;
+		},
 		confirmArea(values) {
-            this.user.address =values
-                .filter((item) => !!item)
-                .map((item) => item.name)
-                .join('-');
-            this.showAddress = false;
-        },
+			this.user.address = values
+				.filter(item => !!item)
+				.map(item => item.name)
+				.join("-");
+			this.showAddress = false;
+		},
 	},
 };
 </script>

@@ -324,6 +324,11 @@ export default {
 	flex-direction: column;
 	padding: 15px 15px 0;
 	box-sizing: border-box;
+	&:last-child{
+		.box{
+			border-bottom: none;
+		}
+	}
 	.title {
 		display: flex;
 		justify-content: space-between;

@@ -108,18 +108,18 @@ export default {
 .list{
     .item{
         margin-bottom: 15px;
-        border-top:2px solid #efefef;
-        box-shadow: 0 3px 5px rgba(0,0,0,.2);
+        border-top:1px solid #f2f2f2;
+        box-shadow: 0 2px 4px rgba(0,0,0,.15);
         .top{
             display: flex;
             justify-content: space-between;
             background-color: #FBFBFB;
             padding: 15px 15px;
             box-sizing: border-box;
+            border-bottom:1px solid #f2f2f2;
             .left{
                 display: flex;
                 align-items: center;
-                
                 img{
                     width: 10px;
                     height: 16px;
@@ -155,7 +155,7 @@ export default {
             }
         }
         .middle{
-            padding: 20px 15px;
+            padding: 15px;
             display: flex;
             img{
                 width: 36%;
@@ -201,21 +201,18 @@ export default {
                 box-sizing: border-box;
                 color: #ff5926;
                 height: 50px;
-                font-size: 30px;
-                font-weight: bold;
+                font-size: 22px;
                 line-height: 50px;
                 .bi {
                     font-size: 14px;
                     font-style: normal;
                 }
-              
             }
             .right {
                 flex: 1;
                 color: #fff;
                 height: 0;
-                font-size: 20px;
-                font-weight: bold;
+                font-size: 16px;
                 line-height: 50px;
                 text-align: center;
                 border-bottom: 50px solid #ff5926;

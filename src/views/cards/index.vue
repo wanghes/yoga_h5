@@ -1,56 +1,101 @@
 <template>
     <div class="wrap">
         <div class="title"><span>在售卡项</span></div>
-        <div class="list">
-            <div class="item">
-                <div class="left">
-                    <img src="http://assets.yoga.com/storage/group_purchase_cover/39/986d20775860e638a48ca9dea04f77.png" alt="">
-                </div>
-                <div class="right">
-                    <div class="right_top">
-                        <span>100元储值卡</span>
-                        <em>￥100.00</em>
-                    </div> 
-                    <div class="right_bottom">
-                        <div class="right_item">
-                            <span>类型：私教卡</span>
-                            <span>有效期：100天</span>
-                        </div>
-                        <div class="right_item">
-                            <span>课程：次卡</span>
+         <van-list class="list" v-model="loading" :finished="finished" finished-text="没有更多了" offset="20" @load="onLoad">
+            <van-cell v-for="item in list" :key="item.id" @click="toDetail(item.id)">
+                <div class="item">
+                    <div class="left">
+                        <img :src="item.cover" alt="">
+                    </div>
+                    <div class="right">
+                        <div class="right_top">
+                            <span>{{item.name}}</span>
+                            <em>￥{{item.price && item.price.toFixed(2)}}</em>
+                        </div> 
+                        <div class="right_bottom">
+                            <div class="right_item">
+                                <span v-if="item.type == 1">类型：次卡</span>
+                                <span v-if="item.type == 2">类型：年卡</span>
+                                <span v-if="item.type == 3">类型：季卡</span>
+                                <span v-if="item.type == 4">类型：月卡</span>
+                                <span v-if="item.type == 5">类型：周卡</span>
+                                <span v-if="item.type == 6">类型：储值卡</span>
+                                <span v-if="item.type == 7">类型：小时卡</span>
+                                <span v-if="item.expire_date_on == 1">有效期：{{item.expire_date}}天</span>
+                                <span v-else>有效期：不限</span>
+                            </div>
+                            <div class="right_item">
+                                <span>支持课程：{{item.count}} 门</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </van-cell>
+        </van-list>
     </div>
 </template>
 <script>
+const cards= require("@/api/card");
 export default {
 	data() {
-		return {};
+		return {
+            loading: false,
+			finished: false,
+			list: [],
+            total: 0,
+            pageSize: 10,
+            currentPage: 1
+        };
 	},
 	mounted() {
-		this.fetchData();
 	},
 	methods: {
-		async fetchData() {},
+        onLoad() {
+			this.fetchData();
+		},
+		async fetchData() {
+            let params = {
+				pageSize: this.pageSize,
+				page: this.currentPage,
+			};
+
+            let res = await cards.list(params);
+
+			if (res.code == 200) {
+				this.total = res.data.total;
+                this.loading = false;
+				if (this.list.length == 0) {
+					this.list = res.data.list;
+				} else {
+					this.list = this.list.concat(res.data.list);
+				}
+
+				if (this.list.length == this.total) {
+					this.finished = true;
+				}
+
+				this.currentPage = this.currentPage + 1;
+			}
+        },
+        toDetail(card_id) {
+            this.$router.push({
+                path: "/card/" + card_id
+            })
+        }
 	},
 };
 </script>
 
 <style lang="less" scoped>
-.wrap{
-    padding: 15px;
-}
 .title{
+    
     font-size: 16px;
     color: #000;
     font-weight: bold;
-    padding: 0 0 15px 0; 
+    padding: 15px;
     border-bottom: 1px solid #efefef;
     span{
-        display: inline-block;
+        display: block;
         padding-left: 10px;
         border-left: 3px solid #FF5926;
     }
@@ -61,8 +106,6 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid #efefef;
         .left{
             width:30%;
             margin-right: 15px;

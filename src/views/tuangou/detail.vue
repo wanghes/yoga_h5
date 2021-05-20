@@ -25,10 +25,10 @@
             </div>
             <div class="bot">
                 <div class="price">
-                    <span class="now_price">拼团价:￥{{detail.price}}</span>
+                    <span class="now_price">拼团价:￥{{detail.now_price}}</span>
                     <span class="old_price">原价:￥{{detail.old_price}}</span>
                 </div>
-                <div class="sell">已秒 99</div>
+                <div class="sell">已拼 {{detail.people}} 个</div>
             </div>
         </div>
 
@@ -41,7 +41,7 @@
                 </div>
                 <div class="item">
                     <span>余额</span>
-                     <span v-if="detail.type == 1">{{detail.times}}次</span>
+                    <span v-if="detail.type == 1">{{detail.times}}次</span>
                     <span v-else-if="detail.type == 6">{{detail.old_price}}元</span>
                     <span v-else-if="detail.type == 7">{{detail.hours}}小时</span>
                     <span v-else>不限制时间</span>
@@ -68,7 +68,7 @@
                 <h3>适用场馆</h3>
                 <div class="item">
                     <div>{{venues.name}}</div>
-                    <div>联系场馆</div>
+                    <div class="contact">联系场馆</div>
                 </div>
             </div>
             <div class="box">
@@ -77,10 +77,17 @@
                     {{detail.des}}
                 </div>
             </div>
+            <div class="box">
+                <h3>场馆环境</h3>
+                <div class="content" v-html="venues.des"></div>
+            </div>
         </div>
         <div class="detail_info"></div>
         <div class="btn">
-            <van-button class="right_btn" block type="info" @click="sSubmit" native-type="submit">立即抢购</van-button>
+            <van-button :disabled="detail.status==0" class="right_btn" block type="info" @click="sSubmit" native-type="submit">
+                <span v-if="detail.status==1">立即抢购</span>
+                <span v-else>活动已经结束</span>
+            </van-button>
         </div>
     </div>
 </template>
@@ -129,11 +136,18 @@ export default {
         },
         async fetchVenues() {
             let res = await venues.query();
-                console.log(res.data)
             if (res.code == 200) {
                 this.venues = res.data;
+                this.venues.des = res.data.des.replace(/<img/g,"<img style='max-width:100%; height:auto;'");
             }
         },
+        sSubmit() {
+            this.$notify({
+                message: "功能开发中",
+                color: "#ffffff",
+                background: "#FF5926"
+            })
+        }
     }
 }
 </script>
@@ -160,8 +174,10 @@ export default {
     .cover{
         width:100%;
         font-size: 0;
+        display: flex;
+        justify-content: center;
         img{
-            width:100%;
+            max-width:100%;
             display: block;
         }
     }
@@ -171,25 +187,29 @@ export default {
         align-items: center;
         padding: 0 15px 15px;
         .price{
+            display: flex;
+            align-items: center;
             .now_price{
-                font-size: 24px;
+                font-size: 20px;
                 color: #FF5926;
                 margin-right: 10px;
             }
             .old_price{
+                font-size: 14px;
                 color: #999999;
                 text-decoration: line-through;
             }
         }
         .sell{
+            font-size: 14px;
             color: #FF5926;
         }
     }
     .second_title{
         padding: 15px;
         box-sizing: border-box;
-        font-size: 16px;
-        color: #999;
+        font-size: 14px;
+        color: #666666;
     }
     .m_info{
         display: flex;
@@ -243,7 +263,7 @@ export default {
     }
 }
 .detail{
-    padding: 15px;
+    padding: 15px 15px 0;
     .box{
         font-size: 14px;
         padding-bottom: 15px;
@@ -252,6 +272,7 @@ export default {
         margin-bottom: 15px;
         &:last-child{
             border-bottom: none;
+            margin-bottom: 0;
         }
         h3{
             color: #FF5926;
@@ -264,6 +285,16 @@ export default {
             line-height: 24px;
             display: flex;
             justify-content: space-between;
+            color: #333333;
+            margin-bottom: 5px;
+            .contact{
+                color: #FF5926;
+            }
+        }
+        .content{
+            img{ 
+                max-width: 100%;
+            }
         }
     }
 }

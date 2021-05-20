@@ -1,6 +1,5 @@
 import request from '@/utils/request'
 
-
 export function tuanke_list(params) {
     return request({
         url: '/index/tuanke/list',
@@ -24,7 +23,6 @@ export function add(data) {
         data
     });
 }
-
 
 export function getCourse(params) {
     return request({

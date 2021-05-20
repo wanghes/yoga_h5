@@ -11,7 +11,7 @@
                     <span class="now_price">￥{{detail.now_price && detail.now_price.toFixed(2)}}</span>
                     <span class="old_price">原价:￥{{detail.old_price && detail.old_price.toFixed(2)}}</span>
                 </div>
-                <div class="sell">已秒 {{detail.people}}</div>
+                <div class="sell">已秒 {{detail.people}} 个</div>
             </div>
         </div>
 
@@ -46,7 +46,7 @@
                 <h3>适用场馆</h3>
                 <div class="item">
                     <div>{{venues.name}}</div>
-                    <div>联系场馆</div>
+                    <div class="contact">联系场馆</div>
                 </div>
             </div>
             <div class="box">
@@ -57,21 +57,23 @@
             </div>
         </div>
 
-        <div class="detail_info">
-            
+        <div class="detail_info" v-html="detail.content">
         </div>
 
         <div class="btn">
-            <van-button plain hairline  class="left_btn" block @click="sSubmit">我的订单</van-button>
-            <van-button class="right_btn" block type="info" @click="sSubmit" native-type="submit">立即抢购</van-button>
+            <van-button plain hairline  class="left_btn" block>我的订单</van-button>
+            <van-button :disabled="detail.tempStatus==0" class="right_btn" block type="primary" @click="sSubmit" native-type="submit">
+                <span v-if="detail.tempStatus==1">立即抢购</span>
+                <span v-else>活动已经结束</span>
+            </van-button>
         </div>
 
     </div>
 </template>
 <script>
+import { getTimeStamp } from "@/utils/index";
 const miaosha = require("@/api/miaosha");
 const venues = require("@/api/venues");
-import { getTimeStamp } from "@/utils/index";
 
 export default {
     data() {
@@ -107,6 +109,19 @@ export default {
 
             if (res.code == 200) {
                 this.detail = res.data;
+                this.detail.content = res.data.content.replace(/<img/g,"<img style='max-width:100%; height:auto;'");
+
+                let nowTime = new Date().getTime();
+
+                if (res.data.status == 1) {
+                    let time = getTimeStamp(res.data.over_time).timeStamp;
+                    if (nowTime > time) {
+                        this.detail.tempStatus = 0;
+                    } else {
+                        this.detail.tempStatus = 1;
+                    }
+                }
+                
                 this.getListByCardId(res.data.bind_card_id)
             }
         },
@@ -121,19 +136,26 @@ export default {
         },
         async fetchVenues() {
             let res = await venues.query();
-                console.log(res.data)
             if (res.code == 200) {
                 this.venues = res.data;
             }
         },
         async sSubmit() {
-
+            if (this.detail.tempStatus == 0) {
+                this.$$toast("活动结束了");
+                return;
+            }
+            this.$notify({
+                message: "功能开发中",
+                color: "#ffffff",
+                background: "#FF5926"
+            })
         }
     }
 }
 </script>
 <style>
-.miaosha_detail .van-button--info{
+.miaosha_detail .van-button--primary{
     background-color: #FF5926;
     border: 1px solid #FF5926;
 }
@@ -157,10 +179,15 @@ export default {
     }
 }
 .detail_info{
-    padding-bottom: 50px;
+    border-top: 5px solid #efefef;
+    padding: 15px 15px 50px;
+    box-sizing: border-box;
+    img{
+        max-width: 100%;
+    }
 }
 .detail{
-    padding: 15px;
+    padding: 15px 15px 0;
     .box{
         font-size: 14px;
         padding-bottom: 15px;
@@ -169,6 +196,7 @@ export default {
         margin-bottom: 15px;
         &:last-child{
             border-bottom: none;
+            margin-bottom: 0;
         }
         h3{
             color: #FF5926;
@@ -181,6 +209,14 @@ export default {
             line-height: 24px;
             display: flex;
             justify-content: space-between;
+            color: #333333;
+            margin-bottom: 5px;
+            .contact{
+                color: #FF5926;
+            }
+        }
+        .content{
+            color: #333;
         }
     }
 }

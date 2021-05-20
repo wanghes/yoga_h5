@@ -47,16 +47,16 @@ export default {
 			],
 			total: 0,
 			pageSize: 10,
-			currentPage: 1
+			currentPage: 1,
 		};
 	},
 	mounted() {
 		this.fetchChannels();
 	},
 	methods: {
-        onLoad() {
-            this.fetchData(0);
-        },
+		onLoad() {
+			this.fetchData(0);
+		},
 		async fetchChannels() {
 			let res = await online.series_channels({});
 			if (res.code == 200) {
@@ -64,7 +64,7 @@ export default {
 			}
 		},
 		async fetchData(cid) {
-	    	let params = {
+			let params = {
 				pageSize: this.pageSize,
 				page: this.currentPage,
 			};
@@ -73,31 +73,31 @@ export default {
 			let res = await online.series_list(params);
 
 			if (res.code == 200) {
+				this.loading = false;
 				this.total = res.data.total;
 				if (this.list.length == 0) {
 					this.list = res.data.list;
 				} else {
 					this.list = this.list.concat(res.data.list);
 				}
-
-                this.loading = false;
+				
 				if (this.list.length == this.total) {
 					this.finished = true;
 				}
 
-				this.pageSize = this.currentPage + 1;
+				this.currentPage = this.currentPage + 1;
 			}
 		},
-        jumpDetailSeries(id) {
-            this.$router.push({
-                path: `/online/series_detail/${id}`
-            })
-        },
-        onClick(name, title) {
-            this.list = [];
-            this.currentPage = 1;
-            this.fetchData(name);
-        }
+		jumpDetailSeries(id) {
+			this.$router.push({
+				path: `/online/series_detail/${id}`,
+			});
+		},
+		onClick(name, title) {
+			this.list = [];
+			this.currentPage = 1;
+			this.fetchData(name);
+		},
 	},
 };
 </script>
@@ -145,7 +145,7 @@ export default {
 				display: flex;
 				flex-direction: column;
 				font-size: 12px;
-                flex: 1;
+				flex: 1;
 				.title {
 					overflow: hidden;
 					text-overflow: ellipsis;

@@ -2,28 +2,29 @@
     <div class="wrap">
         <div class="detail">
             <div class="left">
-                <img v-if="!!detail.teacher_head" :src="detail.teacher_head" alt="">
+                <img v-if="!!detail.teacher_avatar" :src="detail.teacher_avatar" alt="">
                 <img v-else :src="teacherHead" alt="">
+                <span class="laoshi">{{ detail.teacher_name }}</span>
                 <span class="course_type">{{ type == 1? "团课":"私教课" }}</span>
             </div>
             <div class="middle">
-                <h3>{{ type==1 ? detail.course_name : "私教课" }} <span class="laoshi">({{ detail.teacher_name }})</span> </h3>
+                <h3>{{ type==1 ? detail.course_name : "私教课" }}  </h3>
                 <div class="item">
-                    <label class="label">时间：</label>
+                    <label class="label">时间:</label>
                     <span>{{ detail.start_time }}-{{ detail.end_time }}<i class="time">({{detail.diff_time}}分钟)</i></span>
                 </div>
                 <div class="item">
-                    <label class="label">日期：</label>
+                    <label class="label">日期:</label>
                     <span v-if="type == 1">{{ detail.start_date && detail.start_date.slice(0,10) }}</span>
                     <span v-else>{{ detail.date && detail.date.slice(0,10) }}</span>
                 </div>
                 <div class="item">
-                    <label class="label">场馆：</label>
-                    <span>{{ detail.room_name }}<i>(还可预约{{ p_num - count }}人)</i></span>
+                    <label class="label">场馆:</label>
+                    <span class="ground">{{ detail.room_name }}<i>(还可预约{{ p_num - count }}人)</i></span>
                 </div>
             </div>
             <div class="right">
-                <div class="share_btn">
+                <div class="share_btn" @click="shareAction">
                     <img :src="share_icon" alt="">
                     <span>分享</span>
                 </div>
@@ -83,6 +84,7 @@ export default {
             if (res.code == 200) {
                 this.handle(res.data);
                 this.detail = res.data;
+                this.detail.content = res.data.content.replace(/<img/g,"<img style='max-width:100%; height:auto;'");
             }
         },
         handle(data) {
@@ -129,7 +131,9 @@ export default {
                 });
                 return;
             }
-           
+        },
+        shareAction() {
+            this.$toast("功能开发中")
         }
     }
 }
@@ -143,20 +147,26 @@ export default {
 }
 .detail{
     display: flex;
-    padding: 30px 20px;
+    padding: 20px 20px 10px;
     font-size: 14px;
+    position: relative;
     .left{
         display: flex;
         flex-direction: column;
         font-size: 14px;
         padding-right: 20px;
+        text-align: center;
+        .laoshi{
+            color:#FF5926;
+        }
         img{
             width:80px;
             height: 80px;
             border-radius: 50%;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
         }
         .course_type{
+            margin-top: 5px;
             display: inline-block;
             padding: 2px 10px;
             color: #fff;
@@ -173,22 +183,34 @@ export default {
             margin: 0;
             color:#000;
             padding: 0;
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 10px;
-            .laoshi{
-                color:#FF5926;
-            }
+            padding-right: 50px;
+            box-sizing: border-box;
         }
         .item{
             line-height: 26px;
+            display: flex;
+            .label{
+                width: 40px;
+            }
             i{
                 font-style: normal;
                 color: #FF5926;
                 padding-left: 5px;
             }
+            .ground{
+                width:80%;
+            }
         }
     }
     .right{
+        display: inline-block;
+        position: absolute;
+        right: 10px;
+        top: 20px;
+        background-color: #fff;
+        padding-left: 10px;
         .share_btn{
             display: flex;
             align-items: center;
@@ -203,14 +225,16 @@ export default {
     }
 }
 .content{
-    padding: 5px 20px;
+    padding: 10px 20px 0;
     flex: 1;
     min-height: 400px;
     h2{
         font-size: 18px;
+        margin:0;
     }
     .inner{
         color: #666;
+        padding-bottom: 50px;
     }
 }
 .support{

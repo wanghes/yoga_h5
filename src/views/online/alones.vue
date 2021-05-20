@@ -43,7 +43,6 @@ export default {
 	mounted() {},
 	methods: {
 		onLoad() {
-            console.log(12)
 			this.fetchData();
 		},
 		async fetchData() {
