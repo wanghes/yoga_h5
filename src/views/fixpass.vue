@@ -55,8 +55,6 @@ export default {
                 verification_key,
             });
 
-            return;
-
             if (res.code == 200) {
                 this.$router.push({
                     path: "/findOk"

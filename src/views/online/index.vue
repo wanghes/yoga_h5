@@ -31,11 +31,14 @@
                     <span class="arrow"></span>
                 </div> -->
             </div>
-            <div class="box">
+            <div class="box" v-if="jingpins.length > 0">
                 <div class="item jingpin_item" v-for="item in jingpins" :key="item.id" @click="jumpDetailAlone(item.id)">
                     <img :src="item.course_cover" alt="">
                     <span>{{item.course_name}}</span>
                 </div>
+            </div>
+            <div class="box" v-else>
+                <van-empty description="还没有数据" />
             </div>
         </div>
         <div class="list">
@@ -49,7 +52,7 @@
             <div class="menu">
                 <van-tabs type="card" @click="onClick">
                     <van-tab v-for="item in channels" :title="item.name" :name="item.id" :key="item.id">
-                        <div class="box box_2">
+                        <div class="box box_2" v-if="seriesList.length > 0">
                             <div class="item2" v-for="it in seriesList" :key="it.id" @click="jumpDetailSeries(it.id)">
                                 <div class="left">
                                     <img :src="it.course_cover" alt="">
@@ -70,14 +73,20 @@
                                     </div>
                                 </div>
                             </div>
+							<!--
                             <div class="more" @click="toSeries">
                                 <span>点击查看更多</span>
                                 <span class="arrow_down"></span>
                             </div>
+							-->
                         </div>
+                        <div class="box box_2" v-else>
+							<van-empty description="还没有数据" />
+						</div>
                     </van-tab>
                 </van-tabs>
             </div>
+			
         </div>
 
         <div class="list">
@@ -88,8 +97,8 @@
                     <span class="arrow"></span>
                 </div>
             </div>
-            <div class="box box_2">
-                <div class="item2" v-for="item in alonelist" :key="item.id"  @click="jumpDetailAlone(item.id)">
+            <div class="box box_2" v-if="alonelist.length > 0">
+                <div class="item2" v-for="item in alonelist" :key="item.id" @click="jumpDetailAlone(item.id)">
                     <div class="left">
                         <img :src="item.course_cover" alt="">
                     </div>
@@ -109,10 +118,15 @@
                         </div>
                     </div>
                 </div>
+				<!--
                 <div class="more" @click="toAlones">
                     <span>点击查看更多</span>
                     <span class="arrow_down"></span>
                 </div>
+				-->
+            </div>
+            <div class="box box_2" v-else>
+                <van-empty description="还没有数据" />
             </div>
         </div>
 
@@ -134,55 +148,55 @@ export default {
 			ma,
 			images: [banner, banner],
 			ke,
-            seriesList:[],
-            alonelist:[],
-            jingpins:[],
-            focuses: [],
-            channels:[
-                {
+			seriesList: [],
+			alonelist: [],
+			jingpins: [],
+			focuses: [],
+			channels: [
+				{
 					id: 0,
 					name: "全部",
 				},
-            ],
+			],
 		};
 	},
-    mounted() {
-        this.fetchJingpin()
-        this.fetchChannels();
-        this.fetchSeriesData(0);
-        this.fetchAlonesData();
-        this.fetchPic()
-    },
-    methods: {
-        async fetchPic() {
-            let res = await focus.list({
-                type: 2
-            })
-            if (res.code == 200) {
-                this.focuses = res.data
-            }
-        },
-        async fetchJingpin() {
-            let res = await online.query_jingpin_class({
-                pageSize: 2,
-                page: 1
-            });
-            if (res.code == 200) {
-                this.jingpins = res.data;
-			}
-        },
-        async fetchAlonesData() {
-            let res = await online.alones_list({
-                pageSize: 6,
-                page: 1
-            });
-		
+	mounted() {
+		this.fetchJingpin();
+		this.fetchChannels();
+		this.fetchSeriesData(0);
+		this.fetchAlonesData();
+		this.fetchPic();
+	},
+	methods: {
+		async fetchPic() {
+			let res = await focus.list({
+				type: 2,
+			});
 			if (res.code == 200) {
-                this.alonelist = res.data.list;
+				this.focuses = res.data;
 			}
-        },
-        async fetchSeriesData(cid) {
-	    	let params = {
+		},
+		async fetchJingpin() {
+			let res = await online.query_jingpin_class({
+				pageSize: 2,
+				page: 1,
+			});
+			if (res.code == 200) {
+				this.jingpins = res.data;
+			}
+		},
+		async fetchAlonesData() {
+			let res = await online.alones_list({
+				pageSize: 6,
+				page: 1,
+			});
+
+			if (res.code == 200) {
+				this.alonelist = res.data.list;
+			}
+		},
+		async fetchSeriesData(cid) {
+			let params = {
 				pageSize: 6,
 				page: 1,
 			};
@@ -191,40 +205,40 @@ export default {
 			let res = await online.series_list(params);
 			if (res.code == 200) {
 				this.seriesList = res.data.list;
-                console.log(this.seriesList)
+				console.log(this.seriesList);
 			}
 		},
-        async fetchChannels() {
+		async fetchChannels() {
 			let res = await online.series_channels({});
 			if (res.code == 200) {
 				this.channels = this.channels.concat(res.data);
 			}
 		},
-        toSeries() {
-            this.$router.push({
-                path: "/online/series"
-            })
-        },
-        toAlones() {
-            this.$router.push({
-                path: "/online/alones"
-            })
-        },
-        onClick(name, title) {
-            this.seriesList = [];
-            this.fetchSeriesData(name);
-        },
-        jumpDetailSeries(id) {
-            this.$router.push({
-                path: `/online/series_detail/${id}`
-            })
-        },
-        jumpDetailAlone(id) {
-            this.$router.push({
-                path: `/online/alones_detail/${id}`
-            })
-        }
-    },
+		toSeries() {
+			this.$router.push({
+				path: "/online/series",
+			});
+		},
+		toAlones() {
+			this.$router.push({
+				path: "/online/alones",
+			});
+		},
+		onClick(name, title) {
+			this.seriesList = [];
+			this.fetchSeriesData(name);
+		},
+		jumpDetailSeries(id) {
+			this.$router.push({
+				path: `/online/series_detail/${id}`,
+			});
+		},
+		jumpDetailAlone(id) {
+			this.$router.push({
+				path: `/online/alones_detail/${id}`,
+			});
+		},
+	},
 };
 </script>
             
@@ -244,8 +258,9 @@ export default {
 	color: #545454;
 	border: none;
 	margin-right: 5px;
-	font-size:14px;
+	font-size: 14px;
 	border-radius: 3px;
+	max-width: 30%;
 }
 .list_box .van-tabs__nav--complete {
 	padding: 0;
@@ -324,8 +339,8 @@ export default {
 	flex-direction: column;
 	padding: 15px 15px 0;
 	box-sizing: border-box;
-	&:last-child{
-		.box{
+	&:last-child {
+		.box {
 			border-bottom: none;
 		}
 	}
@@ -385,12 +400,11 @@ export default {
 				box-sizing: border-box;
 			}
 		}
-        .jingpin_item{
-            img {
+		.jingpin_item {
+			img {
 				width: 100%;
-                
 			}
-        }
+		}
 	}
 	.box_2 {
 		padding-top: 20px;
@@ -399,7 +413,7 @@ export default {
 			color: #999;
 			text-align: center;
 			font-size: 12px;
-            padding-top: 10px;
+			padding-top: 10px;
 		}
 		.arrow_down {
 			display: inline-block;
@@ -430,7 +444,7 @@ export default {
 				display: flex;
 				flex-direction: column;
 				font-size: 12px;
-                flex: 1;
+				flex: 1;
 				.title {
 					overflow: hidden;
 					text-overflow: ellipsis;
@@ -440,7 +454,7 @@ export default {
 					-webkit-box-orient: vertical;
 					font-size: 14px;
 					line-height: 18px;
-                    height: 36px;
+					height: 36px;
 					color: #000;
 					margin: 0;
 					margin-bottom: 6px;

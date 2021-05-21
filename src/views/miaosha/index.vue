@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <div class="list">
+        <div class="list" v-if="list.length > 0">
             <div class="item" v-for="item in list" :key="item.id" @click="jump(item.id)">
                 <div class="top" v-if="item.tempStatus == 1">
                     <div class="left">
@@ -50,6 +50,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-else>
+             <van-empty description="还没有数据" />
         </div>
     </div>
 </template>

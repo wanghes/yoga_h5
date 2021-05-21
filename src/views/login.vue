@@ -1,6 +1,6 @@
 <template>
     <div class="wrap login_box">
-        <h3 class="title">手机帐号登录</h3>
+        <!-- <h3 class="title">手机帐号登录</h3> -->
         <div class="tab_menu">
             <span @click="tabClick(1)" :class="tab_01_show ? 'active': ''">密码登录</span>
             <span @click="tabClick(2)" :class="tab_02_show ? 'active': ''">短信登录</span>
@@ -33,10 +33,14 @@
                     </div>
                     <div style="margin-top: 50px">
                         <van-button round block type="info" @click="smsSubmit" native-type="submit">提交</van-button>
+                        
                     </div>
                 </div>
             </div>
         </div>
+
+        <van-divider />
+        <van-button round block @click="toHome">随便看看</van-button>
 
         <div class="bot_f" v-if="tab_01_show">
             <span @click="toForget">忘记密码</span>
@@ -46,7 +50,6 @@
         <div class="bot_f" v-if="tab_02_show">
             <span @click="toRegister">立即注册</span>
         </div>
-    
     </div>
 </template>
 

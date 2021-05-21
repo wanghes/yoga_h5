@@ -1,8 +1,8 @@
 <template>
     <div class="wrap register_box">
-        <div class="top">
+        <!-- <div class="top">
             <img class="home" @click="toHome" :src="home" alt="">
-        </div>
+        </div> -->
 
         <h3 class="title">送您VIP瑜伽课，跟我一起打卡吧</h3>
         <div class="info">只用于团体消费，不用于收费早课、孕产及精进类私教课</div>
@@ -38,6 +38,8 @@
             </div>
             <div style="margin-top: 16px">
                 <van-button round block type="info" @click="doRegister" native-type="submit">提交</van-button>
+				<van-divider />
+            	<van-button round block @click="toHome">随便看看</van-button>
             </div>
 
             <div class="bot">

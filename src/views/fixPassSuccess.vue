@@ -1,21 +1,18 @@
 <template>
     <div class="wrap success_box">
-        <div class="top">
-            <img class="close" @click="toHome" :src="close" alt="">
-        </div>
-        <h3 class="title">找回密码</h3>
         <div class="success_content">
             <img class="duihao" :src="duihao" alt="">
             <div class="text">恭喜您密码找回成功！ 请立即登录吧</div>
         </div>
         <div>
             <van-button round block type="info" @click="toLogin">立即登录</van-button>
+            <van-divider />
+            <van-button round block @click="toHome">随便看看</van-button>
         </div>
     </div>
 </template>
 
 <script>
-import {cookie} from "@/utils/index"
 import close from "@/assets/img/close.png"
 import duihao from "@/assets/img/duihao.png"
 

@@ -46,7 +46,11 @@ service.interceptors.response.use(
                     type: 'danger',
                     duration: 5 * 1000
                 });
-                location.reload();
+                cookie.del('user_id')
+                cookie.del('user_token')
+                setTimeout(() => {
+                    Router.push({path: '/login'})
+                }, 1500);
             }
             Notify({
                 message: res.msg || 'Error',
