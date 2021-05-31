@@ -2,7 +2,11 @@
     <div class="wrap tuangou_detail">
         <div class="top">
             <div class="cover">
-                <img :src="detail.cover" alt="">
+                <van-image
+                    width="106%"
+                    fit="contain"
+                    :src="detail.cover"
+                />
             </div>
             <div class="m_info">
                 <div class="left">
@@ -176,10 +180,10 @@ export default {
         font-size: 0;
         display: flex;
         justify-content: center;
-        img{
-            max-width:100%;
-            display: block;
-        }
+        // img{
+        //     max-width:100%;
+        //     display: block;
+        // }
     }
     .bot{
         display: flex;

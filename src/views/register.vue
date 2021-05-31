@@ -7,6 +7,9 @@
         <h3 class="title">送您VIP瑜伽课，跟我一起打卡吧</h3>
         <div class="info">只用于团体消费，不用于收费早课、孕产及精进类私教课</div>
         <img class="theme" :src="yoga_register" alt="">
+		<div class="head">
+			<img :src="head" alt="">
+		</div>
         <div class="form">
             <div class="form_item">
                 <label for="ground">场馆</label>
@@ -25,7 +28,8 @@
                 <label for="vcode">验证码</label>
                 <div class="v_code">
                     <input id="vcode" placeholder="请输入验证码" v-model="vcode" type="text" />
-                    <span class="send_btn" @click="fetchVcode">获取验证码</span>
+					<span class="send_btn" v-if="!sending" @click="fetchVcode">获取验证码</span>
+					<span class="send_btn send_btn_2" v-else>还剩 {{seconds}} 秒</span>
                 </div>
             </div>
 
@@ -53,6 +57,7 @@
 <script>
 import yoga_register from "@/assets/img/yoga_register.png";
 import home from "@/assets/img/home.png";
+import head from "@/assets/img/head.png";
 import { cookie } from "@/utils/index";
 const adviser = require("@/api/adviser");
 const user = require("@/api/user");
@@ -61,7 +66,9 @@ export default {
 	data() {
 		return {
 			phone: "",
-			name: "",
+			name: cookie.get('weixin_nickname')|| "",
+			head: cookie.get('weixin_headimgurl'),
+			openid: cookie.get('weixin_openid') || "",
 			vcode: "",
 			yoga_register,
 			home,
@@ -71,6 +78,8 @@ export default {
 			adviser_name: "请选择为您服务的顾问（选填）",
 			venues: {},
 			verification_key: "",
+			sending: false,
+            seconds: 60
 		};
 	},
 	mounted() {
@@ -100,6 +109,7 @@ export default {
 				});
 				return;
 			}
+			this.startReadSeconds();
 			let res = await user.getVcode({
 				phone: phone,
 			});
@@ -108,11 +118,26 @@ export default {
 				this.verification_key = res.data.verification_key;
 			}
 		},
+		startReadSeconds() {
+            this.sending = true;
+            var timer = setInterval(() => {
+                if (this.seconds == 0) {
+                    clearInterval(timer);
+                    timer = null;
+                    this.sending = false;
+                    this.seconds = 60;
+                    return;
+                }
+                this.seconds = this.seconds - 1;
+            },1000)
+        },
 		async doRegister() {
 			let phone = this.phone;
 			let vcode = this.vcode;
 			let adviser = this.adviser_id;
 			let name = this.name;
+			let head = this.head;
+			let openid = this.openid;
 
 			if (!name) {
 				this.$notify({
@@ -140,11 +165,21 @@ export default {
 				name,
 				vcode,
 				adviser,
+				openid,
+				head,
 				verification_key: this.verification_key,
 			});
 
 			if (res.code == 200) {
-				console.log(res);
+				let {
+					init_password
+				} = res.data;
+				this.$router.replace({
+					path: "/login",
+					query:{
+						init_password
+					}
+				});
 			}
 		},
 		onConfirm(value) {
@@ -197,6 +232,15 @@ textarea::-webkit-input-placeholder {
 		text-align: center;
 		font-size: 18px;
 	}
+	.head{
+		text-align: center;
+		padding: 25px 0 0;
+		img{
+			width: 70px;
+			height: 70px;
+			border-radius: 50%;
+		}
+	}
 	.form {
 		padding: 0 15px;
 	}
@@ -229,6 +273,10 @@ textarea::-webkit-input-placeholder {
 			border: 1px solid #cccccc;
 			color: #999;
 			text-align: center;
+		}
+		.send_btn_2{
+			border:none;
+			border-radius: 0;
 		}
 	}
 	.bot {

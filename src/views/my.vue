@@ -42,14 +42,14 @@
                     </div>
                 </div>
             </div>
-            <div v-else-if="!my_cards.length" class="info_empty">
-                <div class="str">您还没有办卡？ 联系我们的客服办卡吧</div>
+            <div v-else-if="!my_cards.length" class="info_empty" @click="handleCard">
+                <div class="str">您还没有办卡？ 快去办卡吧</div>
             </div>
             <div v-else-if="my_cards.length && !mainCard" class="info_empty">
                 <div class="str">还没有设置主卡</div>
             </div>
-            <div v-else class="info_empty">
-                <div class="str">您还没有办卡？ 联系我们的客服办卡吧</div>
+            <div v-else class="info_empty" @click="handleCard">
+                <div class="str">您还没有办卡？ 快去办卡吧</div>
             </div>
         </div>
         <div class="btns">
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div class="btn" @click="jump(2)">
-                <img :src="my_01" alt="">
+                <img :src="my_02" alt="">
                 <div class="info">
                     <span>申请请假</span>
                     <i>APPLY FOR LEAVE</i>
@@ -301,6 +301,11 @@ export default {
 		toPerson() {
 			this.$router.push({
 				path: "/person",
+			});
+		},
+		handleCard() {
+			this.$router.push({
+				path: "/cards",
 			});
 		},
 		jump(num) {

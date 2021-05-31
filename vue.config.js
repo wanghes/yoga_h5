@@ -1,6 +1,7 @@
 const path = require("path"); 
 const myTheme = path.resolve(__dirname, "./src/assets/less/vantChange.less");
 module.exports = {
+    publicPath : './',
     css: {
         loaderOptions: {
             less: {
@@ -16,6 +17,9 @@ module.exports = {
                 //},
             },
         },
+    },
+    devServer: {
+        disableHostCheck: true
     },
     lintOnSave: false
 }

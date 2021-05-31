@@ -88,8 +88,11 @@
 </template>
 <script>
 import share from "@/assets/img/share_2.png";
+import { cookie } from "@/utils/index";
 const cards = require("@/api/card");
+const weixin = require("@/api/weixin");
 const venues = require("@/api/venues");
+
 export default {
 	data() {
 		return {
@@ -124,11 +127,29 @@ export default {
 			}
 		},
 		async sSubmit() {
-			this.$notify({
-				message: "功能开发中",
-                color: "#ffffff",
-                background: "#FF5926"
+			// this.$notify({
+			// 	message: "功能开发中",
+            //     color: "#ffffff",
+            //     background: "#FF5926"
+			// });
+			let openid = cookie.get('user_openid');
+
+			if (!openid) {
+				this.$toast("获取用户信息失败");
+				return;
+			}
+
+			let res = await weixin.pay({
+				openid: openid,
+				total_fee: Math.ceil(this.detail.price * 100)
 			});
+
+			if (res.code == 200) {
+				this.$toast(res.msg);
+			} else {
+				console.log(res);
+			}
+			
 		},
 	},
 };

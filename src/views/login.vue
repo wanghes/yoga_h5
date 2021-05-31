@@ -16,6 +16,7 @@
                     <div class="form_item">
                         <input v-model="password" placeholder="请填写密码" type="password"/>
                     </div>
+                    <van-notice-bar v-if="!!init_password" wrapable>尊敬的用户您的初始密码是：{{init_password}}，请登录后尽快修改您的密码</van-notice-bar>
                     <div style="margin-top: 50px">
                         <van-button round block type="info" @click="onSubmit" native-type="submit">提交</van-button>
                     </div>
@@ -29,11 +30,11 @@
                     </div>
                     <div class="form_item">
                         <input v-model="vcode" placeholder="请输入验证码" type="text"/>
-                        <span class="last" @click="fetchVcode">获取验证码</span>
+                        <span class="last" v-if="!sending" @click="fetchVcode">获取验证码</span>
+                        <span class="last" v-else>还剩 {{seconds}} 秒</span>
                     </div>
                     <div style="margin-top: 50px">
                         <van-button round block type="info" @click="smsSubmit" native-type="submit">提交</van-button>
-                        
                     </div>
                 </div>
             </div>
@@ -65,10 +66,17 @@ export default {
             vcode: "",
             verification_key: "",
             tab_01_show: true,
-            tab_02_show: false
+            tab_02_show: false,
+            init_password: "",
+            sending: false,
+            seconds: 60
         };
     },
     mounted() {
+        let init_password = this.$route.query.init_password;
+        if (init_password) {
+            this.init_password = init_password;
+        }
         this.verification_key = cookie.get("verification_key");
     },
     methods: {
@@ -129,6 +137,7 @@ export default {
         },
         async fetchVcode() {
             const phone = this.phone;
+         
             if (!phone) {
                 this.$notify({
                     message: "请填写手机号",
@@ -136,13 +145,30 @@ export default {
                 });
                 return;
             }
+
+            this.startReadSeconds();
             let res = await user.getVcode({
                 phone: phone
             });
+            
             if (res.code == 200) {
                 cookie.set('verification_key', res.data.verification_key);
-                this.verification_key = res.data.verification_key 
+                this.verification_key = res.data.verification_key;
+                
             }
+        },
+        startReadSeconds() {
+            this.sending = true;
+            var timer = setInterval(() => {
+                if (this.seconds == 0) {
+                    clearInterval(timer);
+                    timer = null;
+                    this.sending = false;
+                    this.seconds = 60;
+                    return;
+                }
+                this.seconds = this.seconds - 1;
+            },1000)
         },
         tabClick(index) {
             if (index == 1) {

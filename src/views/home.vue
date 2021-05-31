@@ -110,9 +110,7 @@
             </div>
         </div>
         <div class="support_wrap">
-            <div class="support" :style="{'background-image':'url('+join_us+')'}">
-                <img :src="go" alt="">
-            </div>
+            <div class="support" :style="{'background-image':'url('+join_us+')'}"></div>
         </div>
         <van-tabbar v-model="active" active-color="#FF5926" @change="onChange" inactive-color="#000">
             <van-tabbar-item icon="home-o">场馆</van-tabbar-item>
@@ -140,7 +138,6 @@ import s_03 from "@/assets/img/s_03.png";
 import s_04 from "@/assets/img/s_04.png";
 import s_05 from "@/assets/img/s_05.png";
 import s_06 from "@/assets/img/s_06.png";
-import go from "@/assets/img/go.png";
 import join_us from "@/assets/img/join_us.png";
 const teacher = require("@/api/teacher");
 const venues = require("@/api/venues");
@@ -156,7 +153,6 @@ export default {
 			teacherHead,
 			banner_02,
 			join_us,
-			go,
 			banner_01,
 			btns: {
 				btn_01,
@@ -212,7 +208,7 @@ export default {
 			venues: {},
 			teachers: [],
 			checkedEnvs: [],
-			focuses: [],
+			focuses: []
 		};
 	},
 	mounted() {

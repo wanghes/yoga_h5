@@ -15,16 +15,15 @@
                 <span>剩余 {{item.leave}}</span>
             </div>
         </div>
+		<van-button type="warning" @click="jump" block>办理新卡</van-button>
     </div>
 </template>
 <script>
-import { dateFormatYMD, getTimeStamp } from "@/utils/index";
 import { cookie } from "@/utils/index";
-const moment = require("moment");
 import { Toast } from "vant";
-const book = require("@/api/book");
+const moment = require("moment");
 const card = require("@/api/card");
-const user = require("@/api/user");
+
 export default {
 	data() {
 		return {
@@ -68,7 +67,6 @@ export default {
 
 				cardRes.data.forEach(item => {
 					let { open_end_time, type } = item;
-
 					let m1 = moment();
 
 					if (type == 1) {
@@ -102,6 +100,11 @@ export default {
 			}
 			Toast.clear();
 		},
+		jump() {
+			this.$router.push({
+				path: "/cards"
+			})
+		}
 	},
 };
 </script>

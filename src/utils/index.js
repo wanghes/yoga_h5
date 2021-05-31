@@ -83,3 +83,30 @@ export const cookie = {
         document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString() + ";path =/";
     }
 }
+
+
+export function getUrlParam() {
+    var search = window.location.search.substr(1);
+    var mappers = search.split("&");
+    var hash = {};
+    for (var i in mappers) {
+        var index = mappers[i].indexOf("=");
+        hash[mappers[i].substring(0, index)] = mappers[i].substring(index + 1)
+    }
+    return hash;
+}
+
+export function getQueryParams(url) {
+	let args = new Object();
+	let query = url.substring(url.indexOf('?') + 1);
+	let pairs = query.split("&");
+	for (let i = 0; i < pairs.length; i++) {
+		let pos = pairs[i].indexOf('=');
+		if (pos == -1) continue;
+		let argname = pairs[i].substring(0, pos);
+		let value = pairs[i].substring(pos + 1);
+		args[argname] = unescape(value);
+	}
+	args.home = url.split('?')[0]
+	return args;
+}

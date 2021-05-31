@@ -21,7 +21,12 @@
                     <div class="right">已结束</div>
                 </div>
                 <div class="middle">
-                    <img :src="item.cover" alt="">
+                    
+                    <van-image
+                        width="36%"
+                        fit="contain"
+                        :src="item.cover"
+                    />
                     <div class="right">
                         <h3>{{item.name}}</h3>
                         <div class="m_bot">
@@ -160,9 +165,10 @@ export default {
         .middle{
             padding: 15px;
             display: flex;
-            img{
-                width: 36%;
-            }
+            // img{
+            //     width: 125px;
+            //     height: auto;
+            // }
             .right{
                 padding-left: 15px;
                 color: #000000;

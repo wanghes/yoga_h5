@@ -8,6 +8,15 @@ export function login(data) {
     });
 }
 
+
+export function wxLogin(data) {
+    return request({
+        url: '/index/wx/login',
+        method: 'post',
+        data
+    });
+}
+
 export function register(data) {
     return request({
         url: '/index/register',
@@ -55,3 +64,13 @@ export function getUser(params) {
         params
     });
 }
+
+
+export function getUserByOpenId(params) {
+    return request({
+        url: '/index/member/query_by_openid',
+        method: 'get',
+        params
+    });
+}
+
