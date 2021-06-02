@@ -279,7 +279,7 @@ export default {
 					this.cards = data;
 				} else {
 					this.$notify({
-						message: "请您先办理会员卡，联系我们的客服人员",
+						message: "请您先办理会员卡",
 						type: "danger",
 					});
 					return;

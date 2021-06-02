@@ -61,13 +61,13 @@
         </div>
 
         <div class="btn">
-            <van-button plain hairline  class="left_btn" block>我的订单</van-button>
+            <van-button plain hairline class="left_btn" block>我的订单</van-button>
             <van-button :disabled="detail.tempStatus==0" class="right_btn" block type="primary" @click="sSubmit" native-type="submit">
                 <span v-if="detail.tempStatus==1">立即抢购</span>
                 <span v-else>活动已经结束</span>
             </van-button>
         </div>
-
+        
     </div>
 </template>
 <script>
@@ -76,193 +76,196 @@ const miaosha = require("@/api/miaosha");
 const venues = require("@/api/venues");
 
 export default {
-    data() {
-        return {
-            detail:{
-                id: "",
-                name: "",
-                card_name: "",
-                cover: "",
-                card_cover: "",
-                limit: "",
-                now_price: "",
-                old_price: "",
-                over_time: "",
-                people: "",
-                price: "",
-                status: ""
-            },
-            binds:[],
-            venues:{}
-        }
-    },
-    mounted() {
-        this.fetchData();
-        this.fetchVenues()
-    },
-    methods: {
-        async fetchData() {
-            let id = this.$route.params.id;
-            let res = await miaosha.query({
-                id
-            });
+	data() {
+		return {
+			detail: {
+				id: "",
+				name: "",
+				card_name: "",
+				cover: "",
+				card_cover: "",
+				limit: "",
+				now_price: "",
+				old_price: "",
+				over_time: "",
+				people: "",
+				price: "",
+				status: "",
+			},
+			
+			binds: [],
+			venues: {},
+		};
+	},
+	mounted() {
+		this.fetchData();
+		this.fetchVenues();
+	},
+	methods: {
+		async fetchData() {
+			let id = this.$route.params.id;
+			let res = await miaosha.query({
+				id,
+			});
 
-            if (res.code == 200) {
-                this.detail = res.data;
-                this.detail.content = res.data.content.replace(/<img/g,"<img style='max-width:100%; height:auto;'");
+			if (res.code == 200) {
+				this.detail = res.data;
+				this.detail.content = res.data.content.replace(
+					/<img/g,
+					"<img style='max-width:100%; height:auto;'"
+				);
 
-                let nowTime = new Date().getTime();
+				let nowTime = new Date().getTime();
 
-                if (res.data.status == 1) {
-                    let time = getTimeStamp(res.data.over_time).timeStamp;
-                    if (nowTime > time) {
-                        this.detail.tempStatus = 0;
-                    } else {
-                        this.detail.tempStatus = 1;
-                    }
-                }
-                
-                this.getListByCardId(res.data.bind_card_id)
-            }
-        },
-        async getListByCardId(id) {
-            let res = await miaosha.listByCardId({
-                card_id: id
-            });
-            if (res.code == 200) {
-                this.binds = res.data;
-            }
-            
-        },
-        async fetchVenues() {
-            let res = await venues.query();
-            if (res.code == 200) {
-                this.venues = res.data;
-            }
-        },
-        async sSubmit() {
-            if (this.detail.tempStatus == 0) {
-                this.$$toast("活动结束了");
-                return;
-            }
-            this.$notify({
-                message: "功能开发中",
-                color: "#ffffff",
-                background: "#FF5926"
-            })
-        }
-    }
-}
+				if (res.data.status == 1) {
+					let time = getTimeStamp(res.data.over_time).timeStamp;
+					if (nowTime > time) {
+						this.detail.tempStatus = 0;
+					} else {
+						this.detail.tempStatus = 1;
+					}
+				}
+
+				this.getListByCardId(res.data.bind_card_id);
+			}
+		},
+		async getListByCardId(id) {
+			let res = await miaosha.listByCardId({
+				card_id: id,
+			});
+			if (res.code == 200) {
+				this.binds = res.data;
+			}
+		},
+		async fetchVenues() {
+			let res = await venues.query();
+			if (res.code == 200) {
+				this.venues = res.data;
+			}
+		},
+		async sSubmit() {
+			if (this.detail.tempStatus == 0) {
+				this.$$toast("活动结束了");
+				return;
+			}
+			this.$notify({
+				message: "功能开发中",
+				color: "#ffffff",
+				background: "#FF5926",
+			});
+		},
+	},
+};
 </script>
 <style>
-.miaosha_detail .van-button--primary{
-    background-color: #FF5926;
-    border: 1px solid #FF5926;
+.miaosha_detail .van-button--primary {
+	background-color: #ff5926;
+	border: 1px solid #ff5926;
 }
 </style>
 <style lang="less" scoped>
-.btn{
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 999;
-    padding-bottom: constant(safe-area-inset-bottom);
-    padding-bottom: env(safe-area-inset-bottom);
-    background-color: #fff;
-    display: flex;
-    .left_btn{
-        flex: 1;
-    }
-    .right_btn{
-        flex: 2;
-    }
+.btn {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 999;
+	padding-bottom: constant(safe-area-inset-bottom);
+	padding-bottom: env(safe-area-inset-bottom);
+	background-color: #fff;
+	display: flex;
+	.left_btn {
+		flex: 1;
+	}
+	.right_btn {
+		flex: 2;
+	}
 }
-.detail_info{
-    border-top: 5px solid #efefef;
-    padding: 15px 15px 50px;
-    box-sizing: border-box;
-    img{
-        max-width: 100%;
-    }
+.detail_info {
+	border-top: 5px solid #efefef;
+	padding: 15px 15px 50px;
+	box-sizing: border-box;
+	img {
+		max-width: 100%;
+	}
 }
-.detail{
-    padding: 15px 15px 0;
-    .box{
-        font-size: 14px;
-        padding-bottom: 15px;
-        box-sizing: border-box;
-        border-bottom: 1px solid #efefef;
-        margin-bottom: 15px;
-        &:last-child{
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        h3{
-            color: #FF5926;
-            font-size: 16px;
-            padding: 0;
-            margin: 0;
-            margin-bottom: 10px;
-        }
-        .item{
-            line-height: 24px;
-            display: flex;
-            justify-content: space-between;
-            color: #333333;
-            margin-bottom: 5px;
-            .contact{
-                color: #FF5926;
-            }
-        }
-        .content{
-            color: #333;
-        }
-    }
+.detail {
+	padding: 15px 15px 0;
+	.box {
+		font-size: 14px;
+		padding-bottom: 15px;
+		box-sizing: border-box;
+		border-bottom: 1px solid #efefef;
+		margin-bottom: 15px;
+		&:last-child {
+			border-bottom: none;
+			margin-bottom: 0;
+		}
+		h3 {
+			color: #ff5926;
+			font-size: 16px;
+			padding: 0;
+			margin: 0;
+			margin-bottom: 10px;
+		}
+		.item {
+			line-height: 24px;
+			display: flex;
+			justify-content: space-between;
+			color: #333333;
+			margin-bottom: 5px;
+			.contact {
+				color: #ff5926;
+			}
+		}
+		.content {
+			color: #333;
+		}
+	}
 }
 
-.banner{
-    box-sizing: border-box;
-    padding: 15px;
-    font-size: 14px;
-    border-bottom: 5px solid #EFEFEF;
-    text-align: center;
-    .cover{
-        max-width: 100%;
-        margin-bottom: 15px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .time{
-        padding: 10px 0;
-        text-align: center;
-        background-color: rgba(255, 89, 38, 0.1);
-        color: #FF5926;
-    }
-    h3{
-        margin: 0;
-        padding: 15px 0;
-        font-size: 18px;
-        text-align: left;
-    }
-    .bot{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .price{
-            .now_price{
-                font-size: 24px;
-                color: #FF5926;
-                margin-right: 10px;
-            }
-            .old_price{
-                color: #999999;
-                text-decoration: line-through;
-            }
-        }
-        .sell{
-            color: #FF5926;
-        }
-    }
+.banner {
+	box-sizing: border-box;
+	padding: 15px;
+	font-size: 14px;
+	border-bottom: 5px solid #efefef;
+	text-align: center;
+	.cover {
+		max-width: 100%;
+		margin-bottom: 15px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.time {
+		padding: 10px 0;
+		text-align: center;
+		background-color: rgba(255, 89, 38, 0.1);
+		color: #ff5926;
+	}
+	h3 {
+		margin: 0;
+		padding: 15px 0;
+		font-size: 18px;
+		text-align: left;
+	}
+	.bot {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		.price {
+			.now_price {
+				font-size: 24px;
+				color: #ff5926;
+				margin-right: 10px;
+			}
+			.old_price {
+				color: #999999;
+				text-decoration: line-through;
+			}
+		}
+		.sell {
+			color: #ff5926;
+		}
+	}
 }
 </style>

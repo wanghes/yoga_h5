@@ -2,11 +2,7 @@
     <div class="wrap tuangou_detail">
         <div class="top">
             <div class="cover">
-                <van-image
-                    width="106%"
-                    fit="contain"
-                    :src="detail.cover"
-                />
+                <van-image width="106%" fit="contain" :src="detail.cover" />
             </div>
             <div class="m_info">
                 <div class="left">
@@ -19,8 +15,8 @@
                     </div>
                 </div>
                 <div class="right">
-                    <div class="share">
-                        <img :src="share" alt="">
+                    <div class="share" @click="shareAction">
+                        <img :src="share"  alt="">
                     </div>
                 </div>
             </div>
@@ -60,7 +56,7 @@
                     <span>{{detail.price}}元</span>
                 </div>
             </div>
-            
+
             <div class="box">
                 <h3>支持课程</h3>
                 <div class="item" v-for="item in binds" :key="item.id">
@@ -93,216 +89,268 @@
                 <span v-else>活动已经结束</span>
             </van-button>
         </div>
+        <van-popup v-model="show" closeable position="bottom" :style="{ height: '100%' }">
+            <img class="share_img_im" :src="targetImage"  alt="">
+        </van-popup>
+
+        <div class="tan_box" id="imgBox" style="display:none">
+            <div class="head">
+                <img :src="head" alt="">
+                <span class="user_name">{{name}}</span>
+            </div>
+            <img class="share_img" :src="detail.share_img+'?'+new Date().getTime()" crossOrigin="anonymous" alt="">
+        </div>
     </div>
 </template>
 <script>
-import shou from "@/assets/img/shou.png"
-import share from "@/assets/img/share_2.png"
-
+import shou from "@/assets/img/shou.png";
+import share from "@/assets/img/share_2.png";
+import html2canvas from "html2canvas";
+import { cookie } from "@/utils/index";
 const tuangou = require("@/api/tuangou");
 const venues = require("@/api/venues");
 
 export default {
-    data() {
-        return {
-            shou,
-            share,
-            detail:{
-            },
-            binds:[],
-            venues:{}
-        }
-    },
-    mounted() { 
-        this.fetchData();
-        this.fetchVenues();
-    },
-    methods: {
-        async fetchData() {
-            let id = this.$route.params.id;
-            let res = await tuangou.query({
-                id
-            });
+	data() {
+		return {
+			shou,
+			share,
+			detail: {},
+			binds: [],
+			head: cookie.get("user_head") || "",
+			name: cookie.get("user_name") || "",
+			venues: {},
+			show: false,
+			targetImage: "",
+		};
+	},
+	mounted() {
+		this.fetchData();
+		this.fetchVenues();
+	},
+	methods: {
+		async fetchData() {
+			let id = this.$route.params.id;
+			let res = await tuangou.query({
+				id,
+			});
 
-            if (res.code == 200) {
-                this.detail = res.data;
-                this.getListByCardId(res.data.bind_card_id)
-            }
-        },
-        async getListByCardId(id) {
-            let res = await tuangou.listByCardId({
-                card_id: id
-            });
-            if (res.code == 200) {
-                this.binds = res.data;
-            }
-            
-        },
-        async fetchVenues() {
-            let res = await venues.query();
-            if (res.code == 200) {
-                this.venues = res.data;
-                this.venues.des = res.data.des.replace(/<img/g,"<img style='max-width:100%; height:auto;'");
-            }
-        },
-        sSubmit() {
-            this.$notify({
-                message: "功能开发中",
-                color: "#ffffff",
-                background: "#FF5926"
-            })
-        }
-    }
-}
+			if (res.code == 200) {
+                res.data.share_img = res.data.share_img;
+				this.detail = res.data;
+				this.getListByCardId(res.data.bind_card_id);
+			}
+		},
+		async getListByCardId(id) {
+			let res = await tuangou.listByCardId({
+				card_id: id,
+			});
+			if (res.code == 200) {
+				this.binds = res.data;
+			}
+		},
+		async fetchVenues() {
+			let res = await venues.query();
+			if (res.code == 200) {
+				this.venues = res.data;
+				this.venues.des = res.data.des.replace(
+					/<img/g,
+					"<img style='max-width:100%; height:auto;'"
+				);
+			}
+		},
+		shareAction() {
+			var targetDom = document.querySelector("#imgBox");
+            targetDom.style.display = "block"
+            window.scrollTo(0,0);
+			html2canvas(targetDom, { useCORS: true }).then(canvas => {
+				this.show = true;
+				this.targetImage = canvas.toDataURL();
+                targetDom.style.display = "none"
+			});
+		},
+		sSubmit() {
+			this.$notify({
+				message: "功能开发中",
+				color: "#ffffff",
+				background: "#FF5926",
+			});
+		},
+	},
+};
 </script>
 <style>
-.tuangou_detail .van-button--info{
-    background-color: #FF5926;
-    border: 1px solid #FF5926;
+.tuangou_detail .van-button--info {
+	background-color: #ff5926;
+	border: 1px solid #ff5926;
 }
 </style>
 <style lang="less" scoped>
-.btn{
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 999;
-    padding-bottom: constant(safe-area-inset-bottom);
-    padding-bottom: env(safe-area-inset-bottom);
-    background-color: #fff;
-    display: flex;
+.btn {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 999;
+	padding-bottom: constant(safe-area-inset-bottom);
+	padding-bottom: env(safe-area-inset-bottom);
+	background-color: #fff;
+	display: flex;
 }
-.top{
-    border-bottom: 5px solid #EFEFEF;
-    .cover{
-        width:100%;
-        font-size: 0;
-        display: flex;
-        justify-content: center;
-        // img{
-        //     max-width:100%;
-        //     display: block;
-        // }
-    }
-    .bot{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 15px 15px;
-        .price{
-            display: flex;
-            align-items: center;
-            .now_price{
-                font-size: 20px;
-                color: #FF5926;
-                margin-right: 10px;
-            }
-            .old_price{
-                font-size: 14px;
-                color: #999999;
-                text-decoration: line-through;
-            }
-        }
-        .sell{
-            font-size: 14px;
-            color: #FF5926;
-        }
-    }
-    .second_title{
-        padding: 15px;
-        box-sizing: border-box;
-        font-size: 14px;
-        color: #666666;
-    }
-    .m_info{
-        display: flex;
-        justify-content: space-between;
-        background-color: #FF5926;
-        align-items: center;
-        padding: 8px 15px;
-        .left{
-            .left_top{
-                display: flex;
-                color:#fff;
-                align-items: center;
-                font-size:  14px;
-                .shou{
-                    width: 30px;
-                    height: 30px;
-                    
-                    display: flex;
-                    background-color: #FF5926;
-                    align-items: center;
-                    justify-content: center;
-                    img{
-                        width: 18px;
-                        height: 18px;
-                    }
-                }
-            }
-            .left_bot{
-                font-size:  18px;
-                color:#fff;
-                .title{
-                    font-weight: bold;
-                }
-            }
-        }
-        .right{
-            .share{
-                width: 40px;
-                height: 40px;
-                background-color: #fff;
-                border-radius: 50%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                img{
-                    width: 24px;
-                    height: 24px;
-                }
-            }   
-        }
-    }
+.top {
+	border-bottom: 5px solid #efefef;
+	.cover {
+		width: 100%;
+		font-size: 0;
+		display: flex;
+		justify-content: center;
+	}
+	.bot {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 15px 15px;
+		.price {
+			display: flex;
+			align-items: center;
+			.now_price {
+				font-size: 20px;
+				color: #ff5926;
+				margin-right: 10px;
+			}
+			.old_price {
+				font-size: 14px;
+				color: #999999;
+				text-decoration: line-through;
+			}
+		}
+		.sell {
+			font-size: 14px;
+			color: #ff5926;
+		}
+	}
+	.second_title {
+		padding: 15px;
+		box-sizing: border-box;
+		font-size: 14px;
+		color: #666666;
+	}
+	.m_info {
+		display: flex;
+		justify-content: space-between;
+		background-color: #ff5926;
+		align-items: center;
+		padding: 8px 15px;
+		.left {
+			.left_top {
+				display: flex;
+				color: #fff;
+				align-items: center;
+				font-size: 14px;
+				.shou {
+					width: 30px;
+					height: 30px;
+					display: flex;
+					background-color: #ff5926;
+					align-items: center;
+					justify-content: center;
+					img {
+						width: 18px;
+						height: 18px;
+					}
+				}
+			}
+			.left_bot {
+				font-size: 18px;
+				color: #fff;
+				.title {
+					font-weight: bold;
+				}
+			}
+		}
+		.right {
+			.share {
+				width: 40px;
+				height: 40px;
+				background-color: #fff;
+				border-radius: 50%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				img {
+					width: 24px;
+					height: 24px;
+				}
+			}
+		}
+	}
 }
-.detail{
-    padding: 15px 15px 0;
-    .box{
-        font-size: 14px;
-        padding-bottom: 15px;
-        box-sizing: border-box;
-        border-bottom: 1px solid #efefef;
-        margin-bottom: 15px;
-        &:last-child{
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        h3{
-            color: #FF5926;
-            font-size: 16px;
-            padding: 0;
-            margin: 0;
-            margin-bottom: 10px;
-        }
-        .item{
-            line-height: 24px;
-            display: flex;
-            justify-content: space-between;
-            color: #333333;
-            margin-bottom: 5px;
-            .contact{
-                color: #FF5926;
-            }
-        }
-        .content{
-            img{ 
-                max-width: 100%;
-            }
-        }
-    }
+
+.detail {
+	padding: 15px 15px 0;
+	.box {
+		font-size: 14px;
+		padding-bottom: 15px;
+		box-sizing: border-box;
+		border-bottom: 1px solid #efefef;
+		margin-bottom: 15px;
+		&:last-child {
+			border-bottom: none;
+			margin-bottom: 0;
+		}
+		h3 {
+			color: #ff5926;
+			font-size: 16px;
+			padding: 0;
+			margin: 0;
+			margin-bottom: 10px;
+		}
+		.item {
+			line-height: 24px;
+			display: flex;
+			justify-content: space-between;
+			color: #333333;
+			margin-bottom: 5px;
+			.contact {
+				color: #ff5926;
+			}
+		}
+		.content {
+			img {
+				max-width: 100%;
+			}
+		}
+	}
 }
-.detail_info{
-    padding-bottom: 50px;
+.detail_info {
+	padding-bottom: 50px;
+}
+.tan_box {
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	text-align: center;
+	.head {
+		position: absolute;
+		left: 15px;
+		z-index: 10;
+		top: 15px;
+		img {
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			vertical-align: middle;
+			margin-right: 10px;
+		}
+	}
+	.share_img {
+		position: absolute;
+		left: 0;
+		top: 0;
+		max-width: 100%;
+	}
+}
+.share_img_im {
+	max-width: 100%;
 }
 </style>

@@ -1,6 +1,9 @@
 <template>
     <div class="wrap">
-        <div class="title"><span>在售卡项</span></div>
+        <div class="title">
+            <span>在售卡项</span>
+            <img class="home" @click="toHome" :src="home" alt="">
+        </div>
          <van-list class="list" v-model="loading" :finished="finished" finished-text="没有更多了" offset="20" @load="onLoad">
             <van-cell v-for="item in list" :key="item.id" @click="toDetail(item.id)">
                 <div class="item">
@@ -36,9 +39,11 @@
 </template>
 <script>
 const cards= require("@/api/card");
+import home from "@/assets/img/home.png";
 export default {
 	data() {
 		return {
+            home,
             loading: false,
 			finished: false,
 			list: [],
@@ -81,6 +86,11 @@ export default {
             this.$router.push({
                 path: "/card/" + card_id
             })
+        },
+        toHome() {
+            this.$router.replace({
+                path: "/"
+            })
         }
 	},
 };
@@ -88,17 +98,23 @@ export default {
 
 <style lang="less" scoped>
 .title{
-    
+    display: flex;
     font-size: 16px;
     color: #000;
     font-weight: bold;
     padding: 15px;
     border-bottom: 1px solid #efefef;
+    justify-content: space-between;
+    align-items: center;
     span{
         display: block;
         padding-left: 10px;
         border-left: 3px solid #FF5926;
     }
+    .home {
+		width: 18px;
+		height: 16px;
+	}
 }
 .list{
     padding: 0;

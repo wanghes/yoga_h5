@@ -53,6 +53,7 @@ const fetchUserInfo = async (code) => {
 				cookie.set('user_token', data.token);
                 cookie.set('user_head', data.head);
                 cookie.set('user_openid', OPENID);
+				cookie.set('user_name', data.name);
 				Toast.success("登录成功");
 			} else {
 				let weixinUser = await weixin.getUser({

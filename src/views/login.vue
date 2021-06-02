@@ -95,6 +95,7 @@ export default {
                 cookie.set('user_token', data.token);
                 cookie.set('user_phone', data.phone);
                 cookie.set('user_head', data.head);
+                cookie.set('user_name', data.name);
 
                 this.$router.push({
                     path: "/"
@@ -118,12 +119,12 @@ export default {
                 cookie.set('user_token', data.token);
                 cookie.set('user_phone', data.phone);
                 cookie.set('user_head', data.head);
+                cookie.set('user_name', data.name);
 
                 this.$router.push({
                     path: "/"
                 });
             }
-
         },  
         toHome() {
             this.$router.replace({
@@ -137,7 +138,6 @@ export default {
         },
         async fetchVcode() {
             const phone = this.phone;
-         
             if (!phone) {
                 this.$notify({
                     message: "请填写手机号",
@@ -154,7 +154,6 @@ export default {
             if (res.code == 200) {
                 cookie.set('verification_key', res.data.verification_key);
                 this.verification_key = res.data.verification_key;
-                
             }
         },
         startReadSeconds() {
