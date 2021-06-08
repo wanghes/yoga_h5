@@ -1,4 +1,7 @@
 import request from '@/utils/request'
+import axios from 'axios';
+import { UPLOADBASEURL } from "@/utils/config";
+
 
 export function login(data) {
     return request({
@@ -74,3 +77,9 @@ export function getUserByOpenId(params) {
     });
 }
 
+
+export function uploadHead(formData) {
+    return axios.post(`${UPLOADBASEURL}/upload/member_head`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+    })
+}

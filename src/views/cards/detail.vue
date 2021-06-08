@@ -90,8 +90,9 @@
 import share from "@/assets/img/share_2.png";
 import { cookie } from "@/utils/index";
 const cards = require("@/api/card");
-const weixin = require("@/api/weixin");
+const weixinApi = require("@/api/weixin");
 const venues = require("@/api/venues");
+const wx = require("@/assets/js/jweixin-1.6.0.js");
 
 export default {
 	data() {
@@ -100,13 +101,31 @@ export default {
 			detail: {},
 			venues: {},
 			bindCourses: [],
+			userId: cookie.get("user_id"),
 		};
 	},
 	mounted() {
 		this.fetchData();
 		this.fetchVenues();
+		this.executeWeixin();
 	},
 	methods: {
+		async executeWeixin() {
+			let res = await weixinApi.jssdk_config({
+				url: location.href.split("#")[0],
+			});
+			if (res.code == 200) {
+				let config = res.data;
+				// 微信JSSDK异常处理
+				wx.error(function (e) {
+					console.log(e);
+				});
+				wx.config({
+					...config,
+					debug: false,
+				});
+			}
+		},
 		async fetchData() {
 			const id = this.$route.params.id;
 			let res = await cards.query({
@@ -116,6 +135,7 @@ export default {
 			if (res.code == 200) {
 				let { detail, bindCourses } = res.data;
 				this.detail = detail;
+
 				this.bindCourses = bindCourses;
 			}
 		},
@@ -123,33 +143,101 @@ export default {
 			let res = await venues.query();
 			if (res.code == 200) {
 				this.venues = res.data;
-                this.venues.des = res.data.des.replace(/<img/g,"<img style='max-width:100%; height:auto;'");
+				this.venues.des = res.data.des.replace(
+					/<img/g,
+					"<img style='max-width:100%; height:auto;'"
+				);
 			}
 		},
 		async sSubmit() {
-			// this.$notify({
-			// 	message: "功能开发中",
-            //     color: "#ffffff",
-            //     background: "#FF5926"
-			// });
-			let openid = cookie.get('user_openid');
+			let that = this;
+			let openid = cookie.get("user_openid");
+			let name = this.detail.name;
+			let card_type_id = this.detail.id;
+			let member_id = this.userId;
+			let pay_type = 2;
+			let times = 0;
+			let expire_date = 0;
+			let sell_type = 1;
+			let sell_type_name = "会员卡购买";
+			let hours = 0;
+			let card_model = this.detail.type;
+			let remark = "微信支付购卡";
+			let normal_amount = this.detail.price;
+
+			if (this.detail.type == 1) {
+				times = this.detail.times;
+			} else if (this.detail.type == 7) {
+				hours = this.detail.hours;
+			}
+
+			if (this.detail.expire_date_on == 1) {
+				expire_date = this.detail.expire_date;
+			}
 
 			if (!openid) {
 				this.$toast("获取用户信息失败");
 				return;
 			}
 
-			let res = await weixin.pay({
+			let res = await weixinApi.pay({
 				openid: openid,
-				total_fee: Math.ceil(this.detail.price * 100)
+				total_fee: Math.ceil(this.detail.price * 100),
 			});
 
 			if (res.code == 200) {
-				this.$toast(res.msg);
+				wx.ready(async () => {
+					let data = res.data;
+					let options = data.options;
+					let extra = data.extra;
+
+					options.success = function () {
+						let result = weixinApi.payOk({
+							...extra,
+							name,
+							sell_type_name,
+							sell_type,
+							openid,
+							member_id,
+							card_type_id,
+							pay_type,
+							amount: normal_amount,
+							normal_amount,
+							times,
+							expire_date,
+							hours,
+							card_model,
+							remark,
+						});
+
+						if (result.code == 200) {
+							that.$notify({
+								message: result.msg,
+								color: "#ffffff",
+								background: "#00B76F",
+							});
+							setTimeout(() => {
+								that.$router.push({
+									path: "/pay/success",
+								});
+							}, 500);
+						}
+					};
+
+					//  取消支付的操作
+					options.cancel = function () {
+						console.log("已经取消");
+					};
+					// 支付失败的处理
+					options.fail = function () {
+						console.log("支付失败");
+					};
+					// 传入参数，发起JSAPI支付
+					wx.chooseWXPay(options);
+				});
 			} else {
 				console.log(res);
 			}
-			
 		},
 	},
 };
@@ -246,10 +334,10 @@ export default {
 		box-sizing: border-box;
 		border-bottom: 1px solid #efefef;
 		margin-bottom: 15px;
-        &:last-child{
-            border-bottom: none;
-            margin-bottom: 0;
-        }
+		&:last-child {
+			border-bottom: none;
+			margin-bottom: 0;
+		}
 		h3 {
 			color: #000;
 			font-size: 16px;
@@ -263,17 +351,17 @@ export default {
 			display: flex;
 			justify-content: space-between;
 			color: #333;
-            margin-bottom: 5px;
+			margin-bottom: 5px;
 			.contact {
 				color: #ff5926;
 			}
 		}
-        .content{
-            color:#666;
-            img{
-                max-width: 100%;
-            }
-        }
+		.content {
+			color: #666;
+			img {
+				max-width: 100%;
+			}
+		}
 	}
 }
 </style>

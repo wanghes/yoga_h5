@@ -3,10 +3,11 @@
         <h3 class="title">申请体验课</h3>
         <van-divider />
         <van-form @submit="onSubmit">
-            <van-field readonly clickable name="picker" :value="form.jigou" label="机构" placeholder="点击选择机构" @click="showJigouPicker = true" />
-            <van-popup v-model="showJigouPicker" position="bottom">
+            <van-field readonly clickable name="picker" :value="form.jigou" label="机构" />
+            <!-- <van-field readonly clickable name="picker" :value="form.jigou" label="机构" placeholder="点击选择机构" @click="showJigouPicker = true" /> -->
+            <!-- <van-popup v-model="showJigouPicker" position="bottom">
                 <van-picker show-toolbar :columns="jigous" />
-            </van-popup>
+            </van-popup> -->
             <van-field readonly clickable name="course_id" :value="form.course_name" label="课程" placeholder="点击选择课程" @click="showCoursePicker = true" />
             <van-popup v-model="showCoursePicker" position="bottom">
                 <van-picker show-toolbar @confirm="onConfirmCourse" value-key="name" :columns="courses" />
@@ -40,6 +41,7 @@ const icon_09 = require("@/assets/img/tiyan/09.png");
 
 const course = require("@/api/course");
 const user = require("@/api/user");
+const venues = require("@/api/venues");
 import { cookie } from "@/utils/index";
 import { Toast } from "vant";
 
@@ -77,24 +79,33 @@ export default {
 			jigous: ["北京瑜老师瑜伽馆"],
 			form: {
 				jigou: "北京瑜老师瑜伽馆",
-				username: "",
+				username: cookie.get("user_name") || "",
 				start_time: "",
 				price: 0,
-				phone: "",
+				phone: cookie.get("user_phone") || "",
 				course_id: "",
 				course_name: "",
 				des: "",
 			},
+			venues: {},
 		};
 	},
 	mounted() {
 		this.getCourse();
+		this.fetchVenues();
 	},
 	methods: {
 		async getCourse() {
-			let res = await course.get_all_course();
+			let res = await course.get_all_tiyan_list();
 			if (res.code == 200) {
 				this.courses = res.data;
+			}
+		},
+		async fetchVenues() {
+			let res = await venues.query();
+			if (res.code == 200) {
+				this.venues = res.data;
+				this.form.jigou = this.venues.name;
 			}
 		},
 		formatData(data) {

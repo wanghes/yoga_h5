@@ -32,3 +32,21 @@ export function pay(data) {
         data
     });
 }
+
+
+export function payOk(data) {
+    return request({
+        url: '/index/weixin/pay_ok',
+        method: 'post',
+        data
+    });
+}
+
+export function jssdk_config(data) {
+    return request({
+        url: '/index/weixin/jssdk_config',
+        method: 'post',
+        data
+    });
+}
+

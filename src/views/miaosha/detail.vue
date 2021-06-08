@@ -67,13 +67,16 @@
                 <span v-else>活动已经结束</span>
             </van-button>
         </div>
-        
+
     </div>
 </template>
 <script>
 import { getTimeStamp } from "@/utils/index";
+import { cookie } from "@/utils/index";
 const miaosha = require("@/api/miaosha");
 const venues = require("@/api/venues");
+const weixinApi = require("@/api/weixin");
+const wx = require("@/assets/js/jweixin-1.6.0.js");
 
 export default {
 	data() {
@@ -92,16 +95,33 @@ export default {
 				price: "",
 				status: "",
 			},
-			
 			binds: [],
 			venues: {},
+			userId: cookie.get("user_id"),
 		};
 	},
 	mounted() {
 		this.fetchData();
 		this.fetchVenues();
+		this.executeWeixin();
 	},
 	methods: {
+		async executeWeixin() {
+			let res = await weixinApi.jssdk_config({
+				url: location.href.split("#")[0],
+			});
+			if (res.code == 200) {
+				let config = res.data;
+				// 微信JSSDK异常处理
+				wx.error(function (e) {
+					console.log(e);
+				});
+				wx.config({
+					...config,
+					debug: false,
+				});
+			}
+		},
 		async fetchData() {
 			let id = this.$route.params.id;
 			let res = await miaosha.query({
@@ -148,11 +168,96 @@ export default {
 				this.$$toast("活动结束了");
 				return;
 			}
-			this.$notify({
-				message: "功能开发中",
-				color: "#ffffff",
-				background: "#FF5926",
+			let that = this;
+			let openid = cookie.get("user_openid");
+			let name = this.detail.name;
+			let active_id = this.detail.id; // 设置活动的ID
+			let card_type_id = this.detail.bind_card_id;
+			let amount = this.detail.now_price;
+			let member_id = this.userId;
+			let pay_type = 2;
+			let sell_type = 2;
+			let sell_type_name = "秒杀-会员卡购买";
+			let times = 0;
+			let expire_date = 0;
+			let hours = 0;
+			let card_model = this.detail.type;
+			let remark = "微信支付购卡";
+			let normal_amount = this.detail.price;
+
+			if (this.detail.type == 1) {
+				times = this.detail.times;
+			} else if (this.detail.type == 7) {
+				hours = this.detail.hours;
+			}
+
+			if (this.detail.expire_date_on == 1) {
+				expire_date = this.detail.expire_date;
+			}
+
+			if (!openid) {
+				this.$toast("获取用户信息失败");
+				return;
+			}
+
+			let res = await weixinApi.pay({
+				openid: openid,
+				total_fee: Math.ceil(this.detail.now_price * 100),
 			});
+
+			if (res.code == 200) {
+				wx.ready(async () => {
+					let data = res.data;
+					let options = data.options;
+					let extra = data.extra;
+
+					options.success = async () => {
+						let result = await weixinApi.payOk({
+							...extra,
+							name,
+							sell_type_name,
+							sell_type,
+							openid,
+							member_id,
+							active_id,
+							card_type_id,
+							pay_type,
+							amount,
+							normal_amount,
+							times,
+							expire_date,
+							hours,
+							card_model,
+							remark,
+						});
+
+						if (result.code == 200) {
+							that.$notify({
+								message: result.msg,
+								color: "#ffffff",
+								background: "#00B76F",
+							});
+							setTimeout(() => {
+								that.$router.push({
+									path: "/pay/success",
+								});
+							}, 500);
+						}
+					};
+					//  取消支付的操作
+					options.cancel = function () {
+						console.log("已经取消");
+					};
+					// 支付失败的处理
+					options.fail = function () {
+						console.log("支付失败");
+					};
+					// 传入参数，发起JSAPI支付
+					wx.chooseWXPay(options);
+				});
+			} else {
+				console.log(res);
+			}
 		},
 	},
 };

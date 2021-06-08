@@ -393,7 +393,7 @@ export default {
 
 <style lang="less" scoped>
 .wrap {
-	padding: 15px;
+	padding: 15px 15px 49px;
 }
 .btns {
 	display: flex;

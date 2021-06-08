@@ -23,3 +23,20 @@ export function query(params) {
         params
     });
 }
+
+export function activeCard(params) {
+    return request({
+        url: '/index/member/card_active',
+        method: 'get',
+        params
+    });
+}
+
+export function defaultCard(params) {
+    return request({
+        url: '/index/member/card_default',
+        method: 'get',
+        params
+    });
+}
+

@@ -33,6 +33,7 @@ const fetchUserInfo = async (code) => {
 		let res = await weixin.getAuth({
 			code
 		});
+		
 		if (res.code == 200 && !!res.data) {
 			const ACCESS_TOKEN = res.data.access_token
 			const OPENID = res.data.openid
@@ -74,7 +75,19 @@ const fetchUserInfo = async (code) => {
 				});
 			} 
 		} else {
-		 	//Toast.fail("用户授权失败");
+			if (code == 1) {
+				console.log("测试中")
+				return;
+			}
+			let res = await weixin.getCode({
+				callback: location.href
+			});
+			if (res.code == 200 && !!res.data){
+				location.href = res.data;
+			} else {
+				console.log(res);	
+			}
+		 	// Toast.fail("用户授权失败");
 		}
 	}
 }

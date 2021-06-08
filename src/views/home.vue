@@ -109,7 +109,7 @@
                 </div>
             </div>
         </div>
-        <div class="support_wrap">
+        <div class="support_wrap" @click="linkToFenxiao">
             <div class="support" :style="{'background-image':'url('+join_us+')'}"></div>
         </div>
         <van-tabbar v-model="active" active-color="#FF5926" @change="onChange" inactive-color="#000">
@@ -208,7 +208,7 @@ export default {
 			venues: {},
 			teachers: [],
 			checkedEnvs: [],
-			focuses: []
+			focuses: [],
 		};
 	},
 	mounted() {
@@ -349,6 +349,11 @@ export default {
 		openLink(item) {
 			window.open(item.url);
 		},
+		linkToFenxiao() {
+			this.$router.push({
+				path: "/fenxiao",
+			});
+		}
 	},
 };
 </script>

@@ -10,11 +10,11 @@
                     <div class="info">{{item.intro}}</div>
                     <div v-if="item.status ==1" class="bot ing">
                         <span class="status">进行中</span>
-                        <span class="label">低至{{item.price && item.price.toFixed(2)}}元</span>
+                        <span class="label">低至{{item.price && item.now_price.toFixed(2)}}元</span>
                     </div>
                     <div v-else class="bot">
                         <span class="status">已结束</span>
-                        <span class="label">低至{{item.price && item.price.toFixed(2)}}元</span>
+                        <span class="label">低至{{item.price && item.now_price.toFixed(2)}}元</span>
                     </div>
                 </div>
             </div>

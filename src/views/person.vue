@@ -2,11 +2,14 @@
     <div class="wrap person_box">
         <div class="form">
             <div class="item">
-                <div class="left">
+                <div class="left" v-if="requestStatus">
                     <img class="head" v-if="user.head" :src="user.head" alt="">
                     <img class="head" v-else :src="head" alt="">
                 </div>
-                <div class="right">
+				<div class="left" v-else>
+                    <span class="headBox"></span>
+                </div>
+                <div class="right" @click="showHeadModal">
                     <span class="text">更换头像</span>
                     <span class="arrow"></span>
                 </div>
@@ -92,6 +95,9 @@
         <van-popup v-model="showAddress" position="bottom">
             <van-area title="选择地址" :area-list="areaList" :columns-placeholder="['请选择', '请选择', '请选择']" @confirm="confirmArea" @cancel="showAddress = false" />
         </van-popup>
+        <van-popup v-model="showHead" closeable position="bottom" :style="{ height: '50%' }">
+            <van-uploader :after-read="afterRead" />
+        </van-popup>
     </div>
 </template>
 
@@ -107,6 +113,7 @@ export default {
 			head,
 			showNickname: false,
 			showSex: false,
+			showHead: false,
 			showBirthday: false,
 			showAddress: false,
 			user: {},
@@ -114,6 +121,7 @@ export default {
 			currentDate: new Date(),
 			minDate: new Date(1950, 0, 1),
 			maxDate: new Date(2025, 10, 1),
+			requestStatus: false
 		};
 	},
 	mounted() {
@@ -121,12 +129,24 @@ export default {
 		this.fetchData(user_id);
 	},
 	methods: {
+		async afterRead(fileObj) {
+			// 此时可以自行将文件上传至服务器
+			var form = new FormData();
+			form.append("file", fileObj.file);
+			let res = await user.uploadHead(form);
+            this.user.head = res.data.data.imagePath;
+			this.showHead = false;
+		},
+		showHeadModal() {
+			this.showHead = true;
+		},
 		async fetchData(user_id) {
 			let res = await user.getUser({
 				id: user_id,
 			});
 			if (res.code == 200) {
 				this.user = res.data;
+				this.requestStatus = true;
 			}
 		},
 		formatter(type, val) {
@@ -140,7 +160,7 @@ export default {
 			return val;
 		},
 		async submit() {
-			const { name, sex, birthday, address, id } = this.user;
+			const { name, sex, birthday, head, address, id } = this.user;
 
 			let res = await user.updateInfo({
 				id,
@@ -148,6 +168,7 @@ export default {
 				sex,
 				birthday,
 				address,
+				head
 			});
 
 			if (res.code == 200) {
@@ -187,6 +208,11 @@ export default {
 .person_box .van-radio {
 	margin-right: 20px;
 }
+.person_box .van-popup--bottom{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 </style>
 <style lang="less" scoped>
 .form {
@@ -219,6 +245,11 @@ export default {
 				width: 60px;
 				height: 60px;
 				border-radius: 30px;
+			}
+			.headBox{
+				width: 60px;
+				height: 60px;
+				display: block;
 			}
 		}
 		.right {

@@ -57,6 +57,10 @@ export const constantRoutes = [
         component: () => import('@/views/my_cards')
     },
     {
+        path: "/my_tiyans",
+        component: () => import('@/views/my_tiyans')
+    },
+    {
         path: "/detail",
         component: () => import('@/views/detail')
     },
@@ -103,7 +107,15 @@ export const constantRoutes = [
     {
         path: "/card/:id",
         component: () => import('@/views/cards/detail')
-    }
+    },
+    {
+        path: '/pay/success',
+        component: () => import('@/views/payok')
+    },
+    {
+        path: "/fenxiao",
+        component: () => import('@/views/fenxiao/index')
+    },
 ];
 
 const createRouter = () => new Router({

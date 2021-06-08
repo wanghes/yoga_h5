@@ -16,7 +16,7 @@
                 </div>
                 <div class="right">
                     <div class="share" @click="shareAction">
-                        <img :src="share"  alt="">
+                        <img :src="share" alt="">
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
             </van-button>
         </div>
         <van-popup v-model="show" closeable position="bottom" :style="{ height: '100%' }">
-            <img class="share_img_im" :src="targetImage"  alt="">
+            <img class="share_img_im" :src="targetImage" alt="">
         </van-popup>
 
         <div class="tan_box" id="imgBox" style="display:none">
@@ -109,6 +109,8 @@ import html2canvas from "html2canvas";
 import { cookie } from "@/utils/index";
 const tuangou = require("@/api/tuangou");
 const venues = require("@/api/venues");
+const weixinApi = require("@/api/weixin");
+const wx = require("@/assets/js/jweixin-1.6.0.js");
 
 export default {
 	data() {
@@ -122,13 +124,30 @@ export default {
 			venues: {},
 			show: false,
 			targetImage: "",
+			userId: cookie.get("user_id"),
 		};
 	},
 	mounted() {
 		this.fetchData();
 		this.fetchVenues();
+		this.executeWeixin();
 	},
 	methods: {
+		async executeWeixin() {
+			let res = await weixinApi.jssdk_config({
+				url: location.href.split("#")[0],
+			});
+			if (res.code == 200) {
+				let config = res.data;
+				wx.error(function (e) {
+					console.log(e);
+				});
+				wx.config({
+					...config,
+					debug: false,
+				});
+			}
+		},
 		async fetchData() {
 			let id = this.$route.params.id;
 			let res = await tuangou.query({
@@ -136,8 +155,9 @@ export default {
 			});
 
 			if (res.code == 200) {
-                res.data.share_img = res.data.share_img;
+				res.data.share_img = res.data.share_img;
 				this.detail = res.data;
+				console.log(this.detail);
 				this.getListByCardId(res.data.bind_card_id);
 			}
 		},
@@ -161,20 +181,107 @@ export default {
 		},
 		shareAction() {
 			var targetDom = document.querySelector("#imgBox");
-            targetDom.style.display = "block"
-            window.scrollTo(0,0);
+			targetDom.style.display = "block";
+			window.scrollTo(0, 0);
 			html2canvas(targetDom, { useCORS: true }).then(canvas => {
 				this.show = true;
 				this.targetImage = canvas.toDataURL();
-                targetDom.style.display = "none"
+				targetDom.style.display = "none";
 			});
 		},
-		sSubmit() {
-			this.$notify({
-				message: "功能开发中",
-				color: "#ffffff",
-				background: "#FF5926",
+		async sSubmit() {
+			let that = this;
+			let openid = cookie.get('user_openid');
+			let name = this.detail.name;
+			let card_type_id = this.detail.bind_card_id;
+			let active_id = this.detail.id;
+			let member_id = this.userId;
+			let pay_type = 2;
+			let sell_type = 3;
+			let sell_type_name = "团购-会员卡购买";
+			let times = 0;
+			let expire_date = 0;
+			let hours = 0;
+			let card_model = this.detail.type;
+			let remark = "微信支付购卡";
+			let normal_amount = this.detail.price;
+			let amount = this.detail.now_price;
+
+			if (this.detail.type == 1) {
+				times = this.detail.times;
+			} else if (this.detail.type == 7) {
+				hours = this.detail.hours;
+			}
+
+			if (this.detail.expire_date_on == 1) {
+				expire_date = this.detail.expire_date;
+			}
+
+			if (!openid) {
+				this.$toast("获取用户信息失败");
+				return;
+			}
+
+			let res = await weixinApi.pay({
+				openid: openid,
+				total_fee: Math.ceil(this.detail.now_price * 100)
 			});
+
+			if (res.code == 200) {
+				wx.ready(async () => {
+					let data = res.data; 
+					let options = data.options;
+					let extra = data.extra;
+
+					options.success = function () {
+						let result = weixinApi.payOk({
+							...extra,
+							name,
+							sell_type_name,
+							sell_type,
+							openid,
+							active_id,
+							member_id,
+							card_type_id,
+							pay_type,
+							amount,
+							normal_amount,
+							times,
+							expire_date,
+							hours,
+							card_model,
+							remark
+						});
+
+						if (result.code == 200) {
+							that.$notify({
+								message: result.msg,
+							    color: "#ffffff",
+							    background: "#00B76F"
+							});
+							setTimeout(() => {
+								that.$router.push({
+									path: "/pay/success"
+								})
+							}, 500)
+						}
+					};
+					
+					//  取消支付的操作
+					options.cancel = function () {
+						console.log("已经取消")
+					};
+					// 支付失败的处理 
+					options.fail = function () {
+						console.log("支付失败")
+					};
+					// 传入参数，发起JSAPI支付
+					wx.chooseWXPay(options);
+
+				})
+			} else {
+				console.log(res);
+			}
 		},
 	},
 };

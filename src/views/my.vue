@@ -1,18 +1,19 @@
 <template>
     <div class="wrap">
         <div class='top_info'>
-            <div class="user">
+            <div class="user" v-if="requestStatus">
                 <img @click="toPerson" class="avatar" v-if="user.head" :src="user.head" alt="">
                 <img @click="toPerson" class="avatar" v-else :src="head" alt="">
                 <span @click="toPerson">{{user.name}}</span>
-                <span class="tuichu" @click="logout">退出</span>
+                <!-- <span class="tuichu" @click="logout">退出</span> -->
             </div>
+			<div class="user" v-else></div>
             <div class="f_in">
-                <div class="item">
+                <div class="item" @click="lookCards">
                     <span class="num">{{user.member_card_count}}</span>
                     <span>瑜伽卡</span>
                 </div>
-                <div class="item">
+                <div class="item" @click="lookTiyans">
                     <span class="num">{{user_tiyan_num}}</span>
                     <span>体验课</span>
                 </div>
@@ -43,10 +44,10 @@
                 </div>
             </div>
             <div v-else-if="!my_cards.length" class="info_empty" @click="handleCard">
-                <div class="str">您还没有办卡？ 快去办卡吧</div>
+                <div class="str">您还没有办卡？ 点我去办卡</div>
             </div>
-            <div v-else-if="my_cards.length && !mainCard" class="info_empty">
-                <div class="str">还没有设置主卡</div>
+            <div v-else-if="my_cards.length && !mainCard" @click="lookCards" class="info_empty">
+                <div class="str">还没有设置主卡, 点我去设置</div>
             </div>
             <div v-else class="info_empty" @click="handleCard">
                 <div class="str">您还没有办卡？ 快去办卡吧</div>
@@ -144,6 +145,7 @@ export default {
 			my_cards: [],
 			mainCard: null,
 			user_tiyan_num: 0,
+			requestStatus: false
 		};
 	},
 	mounted() {
@@ -227,6 +229,7 @@ export default {
 			});
 			if (res.code == 200) {
 				this.user = res.data;
+				this.requestStatus = true
 			}
 
 			let cardRes = await card.myCards({
@@ -345,6 +348,11 @@ export default {
 				path: "/my_cards",
 			});
 		},
+		lookTiyans() {
+			this.$router.push({
+				path: "/my_tiyans",
+			});
+		},
 		logout() {
 			cookie.del("user_id");
 			cookie.del("user_token");
@@ -437,8 +445,9 @@ export default {
 			}
 			.right {
 				display: flex;
-				justify-content: center;
+				justify-content: flex-end;
 				align-items: center;
+				flex:1;
 				span {
 					font-size: 16px;
 				}

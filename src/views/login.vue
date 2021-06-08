@@ -11,10 +11,10 @@
                 <div class="form">
                     <div class="form_item">
                         <span class="pre">+86 ></span>
-                        <input v-model="phone" placeholder="请填写用户手机" type="text"/>
+                        <input v-model="phone" placeholder="请填写用户手机" type="text" />
                     </div>
                     <div class="form_item">
-                        <input v-model="password" placeholder="请填写密码" type="password"/>
+                        <input v-model="password" placeholder="请填写密码" type="password" />
                     </div>
                     <van-notice-bar v-if="!!init_password" wrapable>尊敬的用户您的初始密码是：{{init_password}}，请登录后尽快修改您的密码</van-notice-bar>
                     <div style="margin-top: 50px">
@@ -26,10 +26,10 @@
                 <div class="form">
                     <div class="form_item">
                         <span class="pre">+86 ></span>
-                        <input v-model="phone" placeholder="请填写用户手机" type="text"/>
+                        <input v-model="phone" placeholder="请填写用户手机" type="text" />
                     </div>
                     <div class="form_item">
-                        <input v-model="vcode" placeholder="请输入验证码" type="text"/>
+                        <input v-model="vcode" placeholder="请输入验证码" type="text" />
                         <span class="last" v-if="!sending" @click="fetchVcode">获取验证码</span>
                         <span class="last" v-else>还剩 {{seconds}} 秒</span>
                     </div>
@@ -56,231 +56,230 @@
 
 
 <script>
-import {cookie} from "@/utils/index"
+import { cookie } from "@/utils/index";
 const user = require("@/api/user");
 export default {
-    data() {
-        return {
-            phone: "",
-            password: "",
-            vcode: "",
-            verification_key: "",
-            tab_01_show: true,
-            tab_02_show: false,
-            init_password: "",
-            sending: false,
-            seconds: 60
-        };
-    },
-    mounted() {
-        let init_password = this.$route.query.init_password;
-        if (init_password) {
-            this.init_password = init_password;
-        }
-        this.verification_key = cookie.get("verification_key");
-    },
-    methods: {
-        async onSubmit() {
-            const phone = this.phone;
-            const password = this.password;
-        
-            let res = await user.login({
-                phone,
-                password
-            });
+	data() {
+		return {
+			phone: "",
+			password: "",
+			vcode: "",
+			verification_key: "",
+			tab_01_show: true,
+			tab_02_show: false,
+			init_password: "",
+			sending: false,
+			seconds: 60,
+		};
+	},
+	mounted() {
+		let init_password = this.$route.query.init_password;
+		if (init_password) {
+			this.init_password = init_password;
+		}
+		this.verification_key = cookie.get("verification_key");
+	},
+	methods: {
+		async onSubmit() {
+			const phone = this.phone;
+			const password = this.password;
 
-            if (res.code == 200) {
-                let data = res.data;
-                cookie.set('user_id', data.user_id);
-                cookie.set('user_token', data.token);
-                cookie.set('user_phone', data.phone);
-                cookie.set('user_head', data.head);
-                cookie.set('user_name', data.name);
+			let res = await user.login({
+				phone,
+				password,
+			});
 
-                this.$router.push({
-                    path: "/"
-                });
-            }
-        },
-        async smsSubmit() {
-            const phone = this.phone;
-            const vcode = this.vcode;
-            const verification_key = this.verification_key;
+			if (res.code == 200) {
+				let data = res.data;
+				cookie.set("user_id", data.user_id);
+				cookie.set("user_token", data.token);
+				cookie.set("user_phone", data.phone);
+				cookie.set("user_head", data.head);
+				cookie.set("user_name", data.name);
 
-            let res = await user.smsLogin({
-                phone,
-                vcode,
-                verification_key
-            });
+				this.$router.push({
+					path: "/",
+				});
+			}
+		},
+		async smsSubmit() {
+			const phone = this.phone;
+			const vcode = this.vcode;
+			const verification_key = this.verification_key;
 
-            if (res.code == 200) {
-                let data = res.data;
-                cookie.set('user_id', data.user_id);
-                cookie.set('user_token', data.token);
-                cookie.set('user_phone', data.phone);
-                cookie.set('user_head', data.head);
-                cookie.set('user_name', data.name);
+			let res = await user.smsLogin({
+				phone,
+				vcode,
+				verification_key,
+			});
 
-                this.$router.push({
-                    path: "/"
-                });
-            }
-        },  
-        toHome() {
-            this.$router.replace({
-                path: "/"
-            })
-        },
-        toForget() {
-            this.$router.push({
-                path: "/forget"
-            })
-        },
-        async fetchVcode() {
-            const phone = this.phone;
-            if (!phone) {
-                this.$notify({
-                    message: "请填写手机号",
-                    color: '#ffffff'
-                });
-                return;
-            }
+			if (res.code == 200) {
+				let data = res.data;
+				cookie.set("user_id", data.user_id);
+				cookie.set("user_token", data.token);
+				cookie.set("user_phone", data.phone);
+				cookie.set("user_head", data.head);
+				cookie.set("user_name", data.name);
 
-            this.startReadSeconds();
-            let res = await user.getVcode({
-                phone: phone
-            });
-            
-            if (res.code == 200) {
-                cookie.set('verification_key', res.data.verification_key);
-                this.verification_key = res.data.verification_key;
-            }
-        },
-        startReadSeconds() {
-            this.sending = true;
-            var timer = setInterval(() => {
-                if (this.seconds == 0) {
-                    clearInterval(timer);
-                    timer = null;
-                    this.sending = false;
-                    this.seconds = 60;
-                    return;
-                }
-                this.seconds = this.seconds - 1;
-            },1000)
-        },
-        tabClick(index) {
-            if (index == 1) {
-                this.tab_01_show = true;
-                this.tab_02_show = false;
-            } else {
-                this.tab_01_show = false;
-                this.tab_02_show = true;
-            }
-        },
-        toRegister() {
-            this.$router.replace({
-                path: "/register"
-            })
-        }
-    }
+				this.$router.push({
+					path: "/",
+				});
+			}
+		},
+		toHome() {
+			this.$router.replace({
+				path: "/",
+			});
+		},
+		toForget() {
+			this.$router.push({
+				path: "/forget",
+			});
+		},
+		async fetchVcode() {
+			const phone = this.phone;
+			if (!phone) {
+				this.$notify({
+					message: "请填写手机号",
+					color: "#ffffff",
+				});
+				return;
+			}
+
+			this.startReadSeconds();
+			let res = await user.getVcode({
+				phone: phone,
+			});
+
+			if (res.code == 200) {
+				cookie.set("verification_key", res.data.verification_key);
+				this.verification_key = res.data.verification_key;
+			}
+		},
+		startReadSeconds() {
+			this.sending = true;
+			var timer = setInterval(() => {
+				if (this.seconds == 0) {
+					clearInterval(timer);
+					timer = null;
+					this.sending = false;
+					this.seconds = 60;
+					return;
+				}
+				this.seconds = this.seconds - 1;
+			}, 1000);
+		},
+		tabClick(index) {
+			if (index == 1) {
+				this.tab_01_show = true;
+				this.tab_02_show = false;
+			} else {
+				this.tab_01_show = false;
+				this.tab_02_show = true;
+			}
+		},
+		toRegister() {
+			this.$router.replace({
+				path: "/register",
+			});
+		},
+	},
 };
 </script>
 <style>
-.login_box .van-button--info{
-    background-color: #FF5926;
-    border: 1px solid #FF5926;
+.login_box .van-button--info {
+	background-color: #ff5926;
+	border: 1px solid #ff5926;
 }
 </style>
 <style lang="less" scoped>
-
-.login_box{
-    padding: 30px;
-    box-sizing: border-box;
-    .title{
-        text-align: left;
-        font-size: 24px;
-        font-weight: normal;
-    }
-    .tab_menu{
-        font-size: 18px;
-        padding: 20px 0;
-        span{
-            margin-right: 0;
-            display: inline-block;
-            position: relative;
-            height: 40px;
-            line-height: 40px;
-            margin-right: 20px;
-        }
-        .active{
-            &:after{
-                position: absolute;
-                content: " ";
-                bottom: 0;
-                left: 50%;
-                transform: translate(-50%,0);
-                width:30px;
-                height: 2px;
-                background-color: #FF5926;
-            }
-        }
-    }
-    .tab_content{
-        width:100%;
-        .form{
-            .form_item{
-                width:100%;
-                display: flex;
-                padding-top: 15px;
-                align-items: center;
-                border-bottom: 1px solid #CCCCCC;
-                .pre{
-                    color:#FF5926;
-                    width:80px;
-                    padding-right: 15px;
-                    box-sizing: border-box;
-                    text-align: right;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                input{
-                    flex:1;
-                    width:100%;
-                    border: none;
-                    padding: 15px;
-                    box-sizing: border-box;
-                }
-                .last{
-                    display: block;
-                    position: relative;
-                    height: 36px;
-                    width: 100px;
-                    font-size: 14px;
-                    text-align: center;
-                    line-height: 36px;
-                    box-sizing: border-box;
-                    &:after{
-                        position: absolute;
-                        content: " ";
-                        width:1px;
-                        height: 20px;
-                        background-color: #b5b5b5;
-                        top: 8px;
-                        color: #999999;
-                        left: 0;
-                    }
-                }
-            }
-        }
-    }
-    .bot_f{
-        display: flex;
-        padding:15px;
-        justify-content: space-between;
-        font-size: 14px;
-        color:#646464;
-    }
+.login_box {
+	padding: 30px;
+	box-sizing: border-box;
+	.title {
+		text-align: left;
+		font-size: 24px;
+		font-weight: normal;
+	}
+	.tab_menu {
+		font-size: 18px;
+		padding: 20px 0;
+		span {
+			margin-right: 0;
+			display: inline-block;
+			position: relative;
+			height: 40px;
+			line-height: 40px;
+			margin-right: 20px;
+		}
+		.active {
+			&:after {
+				position: absolute;
+				content: " ";
+				bottom: 0;
+				left: 50%;
+				transform: translate(-50%, 0);
+				width: 30px;
+				height: 2px;
+				background-color: #ff5926;
+			}
+		}
+	}
+	.tab_content {
+		width: 100%;
+		.form {
+			.form_item {
+				width: 100%;
+				display: flex;
+				padding-top: 15px;
+				align-items: center;
+				border-bottom: 1px solid #cccccc;
+				.pre {
+					color: #ff5926;
+					width: 80px;
+					padding-right: 15px;
+					box-sizing: border-box;
+					text-align: right;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+				input {
+					flex: 1;
+					width: 100%;
+					border: none;
+					padding: 15px;
+					box-sizing: border-box;
+				}
+				.last {
+					display: block;
+					position: relative;
+					height: 36px;
+					width: 100px;
+					font-size: 14px;
+					text-align: center;
+					line-height: 36px;
+					box-sizing: border-box;
+					&:after {
+						position: absolute;
+						content: " ";
+						width: 1px;
+						height: 20px;
+						background-color: #b5b5b5;
+						top: 8px;
+						color: #999999;
+						left: 0;
+					}
+				}
+			}
+		}
+	}
+	.bot_f {
+		display: flex;
+		padding: 15px;
+		justify-content: space-between;
+		font-size: 14px;
+		color: #646464;
+	}
 }
 </style>
