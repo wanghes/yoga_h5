@@ -280,7 +280,7 @@ export default {
 			}
 
 			let tiyanRes = await course.get_tiyan_list({
-				username: this.user.name,
+				phone: this.user.phone,
 			});
 			if (tiyanRes.code == 200) {
 				let len = tiyanRes.data.length;
