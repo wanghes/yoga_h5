@@ -123,6 +123,10 @@ export const constantRoutes = [
         path: "/fenxiao",
         component: () => import('@/views/fenxiao/index')
     },
+    {
+        path: "/my_orders",
+        component: () => import('@/views/my_orders')
+    }
 ];
 
 const createRouter = () => new Router({

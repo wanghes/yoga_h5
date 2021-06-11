@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="content">
-            <van-tabs v-model="activeName" @click="onClick">
+            <van-tabs v-model="activeName">
                 <van-tab title="课程介绍" name="a">
                     <div v-html="detail.course_content"></div>
                 </van-tab>
@@ -37,7 +37,7 @@
             </van-tabs>
         </div>
 
-        <div class="btn" v-if="detail.pay_money != 0">
+        <div class="btn" v-if="buyQueryStatus && !buyStatus">
             <van-button block type="info" @click="sSubmit" native-type="submit">
 				<img :src="huo" class="huo" alt="">
                 <span>立即抢购</span>
@@ -45,12 +45,22 @@
                 <span class="money" v-else><em class="bi">￥</em>{{detail.pay_money.toFixed(2)}}</span>
             </van-button>
         </div>
+		<div class="btn" v-else>
+			<van-button block type="info" @click="gotoClass" native-type="submit">
+				<span>进入课程</span>
+			</van-button>
+		</div>
     </div>
 </template>
 <script>
 import ke from "@/assets/img/img.png";
 import huo from "@/assets/img/huo.png";
+import { cookie } from "@/utils/index";
 const online = require("@/api/online");
+const weixinApi = require("@/api/weixin");
+const wx = require("@/assets/js/jweixin-1.6.0.js");
+
+
 export default {
 	data() {
 		return {
@@ -61,19 +71,52 @@ export default {
 			},
 			hideBtn: false,
 			activeName: "a",
+			userId: cookie.get("user_id"),
+            buyStatus: false,
+            buyQueryStatus: false
 		};
 	},
 	mounted() {
 		let id = this.$route.params.id;
-
 		if (!id) {
 			this.$toast("参数缺失");
 			return;
 		}
 
 		this.fetchData(id);
+		this.executeWeixin();
 	},
 	methods: {
+		async queryBuyStatus() {
+            let course_id = this.detail.id;
+            let member_id = this.userId;
+
+            
+            let res = await online.query_alone_buy_status({
+                course_id,
+                member_id
+            });
+            if (res.code == 200) {
+                this.buyStatus = res.data;
+                this.buyQueryStatus = true;
+            }
+        },
+
+        async executeWeixin() {
+			let res = await weixinApi.jssdk_config({
+				url: location.href.split("#")[0],
+			});
+			if (res.code == 200) {
+				let config = res.data;
+				wx.error(function (e) {
+					console.log(e);
+				});
+				wx.config({
+					...config,
+					debug: false,
+				});
+			}
+		},
 		async fetchData(id) {
 			let res = await online.query_alone_detail({
 				id,
@@ -81,24 +124,119 @@ export default {
 
 			if (res.code == 200) {
 				this.detail = res.data;
+				this.queryBuyStatus(); 
 			}
 		},
-		onClick(name, title) {
-			// this.$toast(name)
-		},
-		async queryIfOrder() {},
+		gotoClass(){
+            let id = this.detail.id;
+            if (!id) {
+                this.$toast("id参数缺失");
+                return;
+            }
+            this.$router.push({
+                path: `/online/video/${id}`,
+                query: {
+                    type: 1
+                }
+            })
+        },
 		async sSubmit() {
-			let id = this.$route.params.id;
-			let res = await online.alone_buy({
-				course_id: id,
+			let that = this;
+			let openid = cookie.get('user_openid');
+			let name = this.detail.course_name;
+			let course_id = this.detail.id;
+			let member_id = this.userId;
+			let pay_type = 1; // 1是微信支付
+			let sell_type = 4; // 4是线下课程购买
+			let sell_type_name = "【线上课程】购买线上课程-单课";
+			// let pay_money = this.detail.pay_money;
+	
+			let remark = `【线上课程】购买课程-${this.detail.course_name}`;
+
+			let amount = this.detail.pay_money;
+
+			if (!openid) {
+				this.$toast("获取用户信息失败");
+                this.$router.push({
+                    path: '/login'
+                })
+				return;
+			}
+
+			if (amount == 0) {
+				let res = await weixinApi.pay_free_online_Ok({
+					name,
+					course_type: 1, // 1是单课，2是系列课
+					course_id,
+					member_id,
+					amount,
+					remark
+				});
+
+				if (res.code == 200) {
+					that.$notify({
+						message: res.msg,
+						color: "#ffffff",
+						background: "#00B76F"
+					});
+					that.fetchData(course_id);
+				}
+				return;
+			}
+
+			let res = await weixinApi.pay({
+				openid: openid,
+				total_fee: Math.ceil(amount * 100)
 			});
 
 			if (res.code == 200) {
-				this.$notify({
-					type: "success",
-					message: res.msg,
-				});
-				this.hideBtn = true;
+				wx.ready(async () => {
+					let data = res.data; 
+					let options = data.options;
+					let extra = data.extra;
+
+					options.success = async () => {
+						let result = await weixinApi.pay_online_Ok({
+							...extra,
+							name,
+                            course_type: 1, // 1是单课，2是系列课
+                            course_id,
+							sell_type_name,
+							sell_type,
+							openid,
+							member_id,
+							pay_type,
+							amount,
+							remark
+						});
+                       
+						if (result.code == 200) {
+							that.$notify({
+								message: result.msg,
+							    color: "#ffffff",
+							    background: "#00B76F"
+							});
+							that.fetchData(course_id);
+							// that.$router.push({
+                            //     path: "/pay/online_success"
+                            // })
+						}
+					};
+					
+					//  取消支付的操作
+					options.cancel = function () {
+						console.log("已经取消")
+					};
+					// 支付失败的处理 
+					options.fail = function () {
+						console.log("支付失败")
+					};
+					// 传入参数，发起JSAPI支付
+					wx.chooseWXPay(options);
+
+				})
+			} else {
+				console.log(res);
 			}
 		},
 	},

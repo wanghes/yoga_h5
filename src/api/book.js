@@ -32,14 +32,6 @@ export function getCourse(params) {
     });
 }
 
-export function getCourseForTiyan(params) {
-    return request({
-        url: '/index/course/tiyan',
-        method: 'get',
-        params
-    });
-}
-
 // export function cancel(data) {
 // 	return request({
 // 		url: '/admin/book/cancel',

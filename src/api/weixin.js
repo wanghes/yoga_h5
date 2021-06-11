@@ -50,6 +50,14 @@ export function pay_online_Ok(data) {
     });
 }
 
+export function pay_free_online_Ok(data) {
+    return request({
+        url: '/index/weixin/pay_free_online_Ok',
+        method: 'post',
+        data
+    });
+}
+
 
 
 export function jssdk_config(data) {

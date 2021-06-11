@@ -91,16 +91,10 @@ export default {
 
 <style lang="less" scoped>
 .list_box {
-	// display: flex;
-	// flex-direction: column;
 	min-height: 100vh;
 	box-sizing: border-box;
 	.box {
-		// display: flex;
-		// flex-direction: row;
-		// justify-content: center;
 		padding-top: 0px;
-		// flex-direction: column;
 		.item {
 			display: flex;
 			flex-direction: row;

@@ -41,12 +41,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.video_wrap{
-	width:100%;
-	height: 300px;
-	video{
-		width:100%;
-		height: 100%;
-	}
-}
+
 </style>

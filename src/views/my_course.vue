@@ -121,7 +121,7 @@
 </template>
 <script>
 import { Toast } from "vant";
-import { dateFormatYMD, getTimeStamp } from "@/utils/index";
+import { getTimeStamp } from "@/utils/index";
 const teacherHead = require("@/assets/img/teacher.png");
 const book = require("@/api/book");
 import { cookie } from "@/utils/index";

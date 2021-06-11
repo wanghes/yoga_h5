@@ -63,6 +63,14 @@ export function series_list(params) {
     });
 }
 
+export function query_alone_buy_status(data) {
+    return request({
+        url: '/index/online/query_alone_buy_status',
+        method: 'post',
+        data
+    });
+}
+
 
 export function query_alone_detail(params) {
     return request({
@@ -71,6 +79,7 @@ export function query_alone_detail(params) {
         params
     });
 }
+
 
 export function query_series_detail(params) {
     return request({

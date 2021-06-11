@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="content">
-            <van-tabs v-model="activeName" @click="onClick">
+            <van-tabs v-model="activeName">
                 <van-tab title="课程介绍" name="a">
                     <div v-html="detail.course_content"></div>
                 </van-tab>
@@ -129,12 +129,10 @@ export default {
         async queryBuyStatus() {
             let course_id = this.detail.id;
             let member_id = this.userId;
-            let course_type = 2;
             
             let res = await online.query_series_buy_status({
                 course_id,
-                member_id,
-                course_type
+                member_id
             });
             if (res.code == 200) {
                 this.buyStatus = res.data;
@@ -174,14 +172,10 @@ export default {
            
             if (res.code == 200) {
                 this.list = res.data;
-                
             }
         },
-        onClick(name, title){
-            // this.$toast(name)
-        },
         gotoClass(){
-            let {pid} = this.detail;
+            let pid = this.detail.id;
             let id = this.list.length ? this.list[0].id : "";
 
             if (!id) {
@@ -219,6 +213,27 @@ export default {
                 this.$router.push({
                     path: '/login'
                 })
+				return;
+			}
+
+            if (amount == 0) {
+				let res = await weixinApi.pay_free_online_Ok({
+					name,
+					course_type: 1, // 1是单课，2是系列课
+					course_id,
+					member_id,
+					amount,
+					remark
+				});
+
+				if (res.code == 200) {
+					that.$notify({
+						message: res.msg,
+						color: "#ffffff",
+						background: "#00B76F"
+					});
+					that.fetchData(course_id);
+				}
 				return;
 			}
 

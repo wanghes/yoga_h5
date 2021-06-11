@@ -64,8 +64,8 @@
             <div class="btn" @click="jump(2)">
                 <img :src="my_02" alt="">
                 <div class="info">
-                    <span>申请请假</span>
-                    <i>APPLY FOR LEAVE</i>
+                    <span>我的订单</span>
+                    <i>MY ORDERS</i>
                 </div>
             </div>
         </div>
@@ -317,7 +317,9 @@ export default {
 					path: "/my_course",
 				});
 			} else {
-                this.$toast('功能开发中')
+				this.$router.replace({
+					path: "/my_orders",
+				});
             }
 		},
 		onChange(index) {
