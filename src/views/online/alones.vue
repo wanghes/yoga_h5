@@ -5,18 +5,18 @@
                 <van-cell v-for="item in list" :key="item.id" @click="toDetail(item.id)">
                     <div class="item">
                         <div class="left">
-                            <img :src="item.course_cover" alt="">
+                            <van-image fit="cover" :src="item.course_cover"></van-image>
                         </div>
                         <div class="info">
-                            <h3 class="title">{{item.course_name}}</h3>
-                            <div class="w_b">
-                                <div class="center">
-                                    <span v-if="item.pay_money == 0" class="price">免费</span>
-                                    <span v-else class="price">￥{{item.pay_money && item.pay_money.toFixed(2)}}</span>
-                                </div>
-                                <div class="remo">
-                                    <!-- <span>223次学习</span> -->
-                                </div>
+                            <h3 class="title">
+                                {{item.course_name}}
+                            </h3>
+                            <div class="center">
+                                <span v-if="item.pay_money == 0" class="price">免费</span>
+                                <span v-else class="price">￥{{item.pay_money.toFixed(2)}}</span>
+                            </div>
+                            <div class="remo">
+                                <span>{{item.create_time}}</span>
                             </div>
                         </div>
                     </div>
@@ -35,9 +35,9 @@ export default {
 			loading: false,
 			finished: false,
 			list: [],
-            total: 0,
-            pageSize: 10,
-            currentPage: 1
+			total: 0,
+			pageSize: 10,
+			currentPage: 1,
 		};
 	},
 	mounted() {},
@@ -47,34 +47,32 @@ export default {
 		},
 		async fetchData() {
 			let res = await online.alones_list({
-                pageSize: this.pageSize,
-                page: this.currentPage
-            });
-		
+				pageSize: this.pageSize,
+				page: this.currentPage,
+			});
+
 			if (res.code == 200) {
-                this.loading = false;
-                this.total = res.data.total;
-                if (this.list.length == 0) {
-                    this.list = res.data.list;
-                } else {
-                    this.list = this.list.concat(res.data.list);            
-                }
-                
-        
-                if (this.list.length == this.total) {
-                    this.finished = true;
-                }
-                
-                this.currentPage = this.currentPage + 1;
-                
+				this.loading = false;
+				this.total = res.data.total;
+				if (this.list.length == 0) {
+					this.list = res.data.list;
+				} else {
+					this.list = this.list.concat(res.data.list);
+				}
+
+				if (this.list.length == this.total) {
+					this.finished = true;
+				}
+
+				this.currentPage = this.currentPage + 1;
 			}
-            
 		},
-        toDetail(id) {
-            this.$router.push({
-                path: "/online/alones_detail/" + id
-            })
-        }
+
+		toDetail(id) {
+			this.$router.push({
+				path: "/online/alones_detail/" + id,
+			});
+		},
 	},
 };
 </script>
@@ -95,7 +93,7 @@ export default {
 .list_box {
 	// display: flex;
 	// flex-direction: column;
-    min-height:100vh ;
+	min-height: 100vh;
 	box-sizing: border-box;
 	.box {
 		// display: flex;
@@ -108,20 +106,21 @@ export default {
 			flex-direction: row;
 			align-items: center;
 			.left {
-				width: 130px;
+				width: 150px;
 				padding-right: 10px;
-				display: flex;
-				align-items: center;
+				height: 90px;
 				box-sizing: border-box;
-				img {
-					width: 120px;
-					border-radius: 3px;
+				.van-image {
+					width: 140px;
+					height: 90px;
 				}
 			}
 			.info {
 				display: flex;
 				flex-direction: column;
+				height: 90px;
 				font-size: 12px;
+				justify-content: space-between;
 				flex: 1;
 				.title {
 					overflow: hidden;
@@ -132,31 +131,37 @@ export default {
 					-webkit-box-orient: vertical;
 					font-size: 14px;
 					line-height: 18px;
-					height: 36px;
 					color: #000;
 					margin: 0;
 					margin-bottom: 6px;
 				}
-				.w_b {
-					color: #999;
+				
+				.center{
 					display: flex;
-					justify-content: space-between;
 					align-items: center;
 				}
 				.cu {
 					background-color: #ff5927;
+					display: flex;
+					align-items: center;
+					justify-content: center;
 					color: #fff;
 					padding: 3px;
-					width: 18px;
-					height: 18px;
+					font-size: 12px;
+					width: 14px;
+					height: 14px;
 					border-radius: 50%;
-					text-align: center;
-					display: inline-block;
 					margin-right: 5px;
 				}
 				.price {
 					color: #ff5927;
 					font-weight: bold;
+					em{
+						font-style: normal;
+					}
+				}
+				.remo{
+					color: #999;
 				}
 			}
 		}

@@ -159,10 +159,10 @@ export default {
 			let times = 0;
 			let expire_date = 0;
 			let sell_type = 1;
-			let sell_type_name = "会员卡购买";
+			let sell_type_name = "【线下课程】会员卡购买";
 			let hours = 0;
 			let card_model = this.detail.type;
-			let remark = "微信支付购卡";
+			let remark = "【线下课程】微信支付购卡";
 			let normal_amount = this.detail.price;
 
 			if (this.detail.type == 1) {
@@ -191,8 +191,8 @@ export default {
 					let options = data.options;
 					let extra = data.extra;
 
-					options.success = function () {
-						let result = weixinApi.payOk({
+					options.success = async () => {
+						let result = await weixinApi.payOk({
 							...extra,
 							name,
 							sell_type_name,

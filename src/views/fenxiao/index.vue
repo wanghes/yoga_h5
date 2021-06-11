@@ -535,6 +535,8 @@ const b_05 = require("@/assets/img/fenxiao/b_05.png");
 const b_06 = require("@/assets/img/fenxiao/b_06.png");
 const close = require("@/assets/img/fenxiao/close.png");
 const close2 = require("@/assets/img/fenxiao/close_02.png");
+const weixinApi = require("@/api/weixin");
+const wx = require("@/assets/js/jweixin-1.6.0.js");
 
 export default {
     data() {
@@ -594,7 +596,50 @@ export default {
             activeIndex: 0
         }
     },
+    mounted() {
+        this.executeWeixin();
+    },
     methods: {
+        async executeWeixin() {
+			let res = await weixinApi.jssdk_config({
+				url: location.href.split("#")[0],
+			});
+			if (res.code == 200) {
+				let config = res.data;
+				// 微信JSSDK异常处理
+				wx.error(function (e) {
+					console.log(e);
+				});
+				wx.config({
+					...config,
+					debug: false,
+				});
+
+                wx.ready(function () {
+					// that.showShare = false;
+					wx.updateAppMessageShareData({
+						title:"带您赚钱的约课系统", // 分享标题
+						desc: "运行稳定不卡顿，设计简洁上手快，统计精准不出错，功能全面效率高", // 分享描述
+						link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+						success: function (res) {
+							// console.log(res);
+							// 设置成功
+						},
+						fail(error) {
+							// console.log(error);
+						},
+					});
+					wx.updateTimelineShareData({
+						title:"带您赚钱的约课系统",
+						link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+					
+						success: function () {
+							// 设置成功
+						},
+					});
+				});
+			}
+		},
         changeItem(index) {
             this.activeIndex = index
         },

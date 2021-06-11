@@ -2,6 +2,7 @@
     <div class="wrap detail_box">
         <div class="top">
             <img class="theme" :src="detail.course_cover" alt="">
+            <!--
             <div class="bot_info">
                 <div class="left">
                     <span class="mianfei" v-if="detail.pay_money == 0">免费</span>
@@ -11,16 +12,17 @@
                     <span>限时特价</span>
                 </div>
             </div>
+			-->
             <div class="title">
                 <span>{{detail.course_name}}</span>
             </div>
             <div class="t_info">
                 <span>
-                    <van-icon name="points" /> 
+                    <van-icon name="points" />
                     <span>共1节课</span>
                 </span>
                 <span>
-                    <van-icon name="replay" /> 
+                    <van-icon name="replay" />
                     <span>支持重播</span>
                 </span>
             </div>
@@ -36,65 +38,69 @@
         </div>
 
         <div class="btn" v-if="detail.pay_money != 0">
-            <van-button block type="info" @click="sSubmit" native-type="submit">立即抢购</van-button>
+            <van-button block type="info" @click="sSubmit" native-type="submit">
+				<img :src="huo" class="huo" alt="">
+                <span>立即抢购</span>
+                <span class="money" v-if="detail.pay_money == 0">免费</span>
+                <span class="money" v-else><em class="bi">￥</em>{{detail.pay_money.toFixed(2)}}</span>
+            </van-button>
         </div>
     </div>
 </template>
 <script>
 import ke from "@/assets/img/img.png";
+import huo from "@/assets/img/huo.png";
 const online = require("@/api/online");
 export default {
 	data() {
 		return {
 			ke,
+			huo,
 			detail: {
-                pay_money: 0
-            },
+				pay_money: 0,
+			},
 			hideBtn: false,
-            activeName: "a"
+			activeName: "a",
 		};
 	},
 	mounted() {
-        let id = this.$route.params.id;
-        
-        if (!id) {
-            this.$toast("参数缺失");
-            return;
-        }
-        
+		let id = this.$route.params.id;
+
+		if (!id) {
+			this.$toast("参数缺失");
+			return;
+		}
+
 		this.fetchData(id);
 	},
 	methods: {
 		async fetchData(id) {
-            let res = await online.query_alone_detail({
-                id
-            });
-           
-            if (res.code == 200) {
-                this.detail = res.data;
-            }
-        },
-        onClick(name, title){
-            // this.$toast(name)
-        },
-		async queryIfOrder() {
+			let res = await online.query_alone_detail({
+				id,
+			});
 
+			if (res.code == 200) {
+				this.detail = res.data;
+			}
 		},
-        async sSubmit() {
+		onClick(name, title) {
+			// this.$toast(name)
+		},
+		async queryIfOrder() {},
+		async sSubmit() {
 			let id = this.$route.params.id;
 			let res = await online.alone_buy({
-				course_id: id
+				course_id: id,
 			});
-			
-			if(res.code == 200) {
+
+			if (res.code == 200) {
 				this.$notify({
 					type: "success",
-					message: res.msg
+					message: res.msg,
 				});
 				this.hideBtn = true;
 			}
-
-        }
+		},
 	},
 };
 </script>
@@ -105,18 +111,26 @@ export default {
 .detail_box .van-tabs__line {
 	background-color: #ff5927;
 }
-.detail_box .van-cell{
-    padding: 15px;
+.detail_box .van-cell {
+	padding: 15px;
 }
-.detail_box .van-tab__pane{
-    padding: 15px 0;
+.detail_box .van-tab__pane {
+	padding: 15px 0;
 }
-.detail_box .van-tab__pane img{
-    max-width: 100%;
+.detail_box .van-tab__pane img {
+	max-width: 100%;
 }
-.detail_box .van-button--info{
-    background-color: #FF5926;
-    border: 1px solid #FF5926;
+.detail_box .van-button--info {
+	background-color: #ff5926;
+	border: 1px solid #ff5926;
+}
+.detail_box .van-button--normal{
+	font-size: 18px;
+	font-weight: bold;
+}
+.detail_box .van-button__text{
+	display: flex;
+	align-items: flex-end;
 }
 </style>   
 
@@ -127,7 +141,7 @@ export default {
 	.theme {
 		max-width: 100%;
 		display: block;
-        margin: 0 auto;
+		margin: 0 auto;
 	}
 	.bot_info {
 		display: flex;
@@ -146,9 +160,9 @@ export default {
 				font-size: 14px;
 				font-style: normal;
 			}
-            .mianfei{
-                font-size: 20px;
-            }
+			.mianfei {
+				font-size: 20px;
+			}
 		}
 		.right {
 			flex: 1;
@@ -196,17 +210,36 @@ export default {
 		}
 	}
 }
-.content{
-    padding: 0 15px;
+.content {
+	padding: 0 15px;
 }
-.btn{
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 999;
-    padding-bottom: constant(safe-area-inset-bottom);
-    padding-bottom: env(safe-area-inset-bottom);
-    background-color: #fff;
+.btn {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	font-size: 16px;
+	z-index: 999;
+	padding-bottom: constant(safe-area-inset-bottom);
+	padding-bottom: env(safe-area-inset-bottom);
+	background-color: #fff;
+	.huo{
+		display: inline-block;
+		width: 18px;
+		height: 22px;
+		margin-right: 5px;
+		vertical-align: middle;
+	}
+	.money{
+		display: inline-block;
+		color:#fff;
+		margin-left: 5px;
+		font-size: 12px;
+		font-weight: normal;
+		em{
+			font-style: normal;
+		}
+	}
 }
+
 </style>

@@ -24,6 +24,15 @@ export function alones_list(params) {
     });
 }
 
+export function query_series_buy_status(data) {
+    return request({
+        url: '/index/online/query_series_buy_status',
+        method: 'post',
+        data
+    });
+}
+
+
 export function query_series_by_pid(params) {
     return request({
         url: '/index/online/query_series_by_pid',
@@ -31,6 +40,8 @@ export function query_series_by_pid(params) {
         params
     });
 }
+
+
 
 export function query_jingpin_class(params) {
     return request({
@@ -51,6 +62,7 @@ export function series_list(params) {
         params
     });
 }
+
 
 export function query_alone_detail(params) {
     return request({

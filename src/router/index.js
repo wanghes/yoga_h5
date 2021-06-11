@@ -7,7 +7,6 @@ Router.prototype.push = function push(location, onResolve, onReject) {
     return originalPush.call(this, location).catch(err => err)
 }
 
-
 Vue.use(Router);
 
 
@@ -85,6 +84,10 @@ export const constantRoutes = [
         component: () => import('@/views/online/series_detail')
     },
     {
+        path: "/online/video/:id",
+        component: () => import('@/views/online/video')
+    },
+    {
         path: "/miaosha",
         component: () => import('@/views/miaosha/index')
     },
@@ -111,6 +114,10 @@ export const constantRoutes = [
     {
         path: '/pay/success',
         component: () => import('@/views/payok')
+    },
+    {
+        path: '/pay/online_success',
+        component: () => import('@/views/pay_online_ok')
     },
     {
         path: "/fenxiao",

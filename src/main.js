@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vant from 'vant';
+import Vant, { Image as VanImage } from 'vant';
 import 'vant/lib/index.css';
 import '@/assets/less/style.less';
 import router from './router'
@@ -16,6 +16,7 @@ Vue.use(Vant);
 Vue.use(Notify);
 Vue.use(Lazyload);
 Vue.use(Empty);
+Vue.use(VanImage);
 Vue.config.productionTip = false
 
 // http://localhost:8080/?aid=LYK03fc5rP&code=1&type=app#/

@@ -42,6 +42,16 @@ export function payOk(data) {
     });
 }
 
+export function pay_online_Ok(data) {
+    return request({
+        url: '/index/weixin/pay_online_Ok',
+        method: 'post',
+        data
+    });
+}
+
+
+
 export function jssdk_config(data) {
     return request({
         url: '/index/weixin/jssdk_config',
