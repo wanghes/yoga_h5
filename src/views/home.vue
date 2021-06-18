@@ -350,9 +350,10 @@ export default {
 			window.open(item.url);
 		},
 		linkToFenxiao() {
-			this.$router.push({
-				path: "/fenxiao",
-			});
+			window.open('http://spread.yogaguanjia.com')
+			// this.$router.push({
+			// 	path: "/fenxiao",
+			// });
 		}
 	},
 };

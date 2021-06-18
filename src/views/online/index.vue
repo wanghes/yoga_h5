@@ -32,8 +32,8 @@
                 </div> -->
             </div>
             <div class="box jingpin_box" v-if="jingpins.length > 0">
-                <div class="item jingpin_item" v-for="item in jingpins" :key="item.id" @click="jumpDetailAlone(item.id)">
-                    <van-image :src="item.course_cover"></van-image>
+                <div class="item jingpin_item" v-for="item in jingpins" :key="item.id" @click="jumpDetailSeries(item.id)">
+                    <van-image fit="cover" :src="item.course_cover"></van-image>
                     <span>{{item.course_name}}</span>
                 </div>
             </div>
@@ -181,7 +181,7 @@ export default {
 			}
 		},
 		async fetchJingpin() {
-			let res = await online.query_jingpin_class({
+			let res = await online.query_jingpin_series_class({
 				pageSize: 10,
 				page: 1,
 			});

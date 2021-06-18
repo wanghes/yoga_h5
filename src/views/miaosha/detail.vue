@@ -11,7 +11,7 @@
                     <span class="now_price">￥{{detail.now_price && detail.now_price.toFixed(2)}}</span>
                     <span class="old_price">原价:￥{{detail.old_price && detail.old_price.toFixed(2)}}</span>
                 </div>
-                <div class="sell">已秒 {{detail.people}} 个</div>
+                <div class="sell">已秒 {{detail.people}}/{{detail.limit}}</div>
             </div>
         </div>
 
@@ -45,7 +45,10 @@
             <div class="box">
                 <h3>适用场馆</h3>
                 <div class="item">
-                    <div>{{venues.name}}</div>
+                    <div class="ve_name">
+						<span class="name_i">{{venues.name}}</span>
+						<span>{{venues.adress}}</span>
+					</div>
                     <div class="contact">联系场馆</div>
                 </div>
             </div>
@@ -161,6 +164,7 @@ export default {
 			let res = await venues.query();
 			if (res.code == 200) {
 				this.venues = res.data;
+				console.log(this.venues)
 			}
 		},
 		async sSubmit() {
@@ -319,6 +323,17 @@ export default {
 			justify-content: space-between;
 			color: #333333;
 			margin-bottom: 5px;
+			align-items: center;
+			.ve_name{
+				display: flex;
+				flex-direction: column;
+				font-size: 12px;
+				.name_i{
+					color: red;
+					font-weight: bold;
+					font-size: 14px;
+				}
+			}
 			.contact {
 				color: #ff5926;
 			}

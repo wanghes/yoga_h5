@@ -52,6 +52,16 @@ export function query_jingpin_class(params) {
 }
 
 
+export function query_jingpin_series_class(params) {
+    return request({
+        url: '/index/online/jingpin_series_class',
+        method: 'get',
+        params
+    });
+}
+
+
+
 
 
 

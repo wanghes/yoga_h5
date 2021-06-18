@@ -120,10 +120,6 @@ export const constantRoutes = [
         component: () => import('@/views/pay_online_ok')
     },
     {
-        path: "/fenxiao",
-        component: () => import('@/views/fenxiao/index')
-    },
-    {
         path: "/my_orders",
         component: () => import('@/views/my_orders')
     }
