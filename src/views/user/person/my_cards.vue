@@ -32,7 +32,7 @@
             </div>
 			<div class="btns">
 				<van-button v-if="item.status == 0" @click="activeCard(item)" plain size="small" color="#ff5926">激活该卡</van-button>
-				<van-button v-if="item.default==0" @click="setDefault(item)" size="small" color="linear-gradient(to right, #ff6034, #ff5926)">设为默认</van-button>
+				<van-button v-if="item.default == 0" @click="setDefault(item)" size="small" color="linear-gradient(to right, #ff6034, #ff5926)">设为默认</van-button>
 			</div>
         </div>
 		

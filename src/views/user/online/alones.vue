@@ -129,8 +129,8 @@ export default {
 					margin: 0;
 					margin-bottom: 6px;
 				}
-				
-				.center{
+
+				.center {
 					display: flex;
 					align-items: center;
 				}
@@ -150,11 +150,11 @@ export default {
 				.price {
 					color: #ff5927;
 					font-weight: bold;
-					em{
+					em {
 						font-style: normal;
 					}
 				}
-				.remo{
+				.remo {
 					color: #999;
 				}
 			}

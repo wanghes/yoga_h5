@@ -9,128 +9,179 @@ Router.prototype.push = function push(location, onResolve, onReject) {
 
 Vue.use(Router);
 
-
-export const constantRoutes = [
+const commonRoutes = [
+    {
+        path: '/',
+        redirect: '/home',
+    },
+    {
+        path: '/home',
+        component: () => import('@/views/user/home'),
+        meta: {
+            title:"小鱼管家-客户端"
+        }
+    },
     {
         path: '/login',
-        component: () => import('@/views/login')
+        component: () => import('@/views/user/login')
     },
     {
         path: '/register',
-        component: () => import('@/views/register')
+        component: () => import('@/views/user/register')
     },
     {
         path: '/forget',
-        component: () => import('@/views/fixpass')
-    },
-    {
-        path: '/findOk',
-        component: () => import('@/views/fixPassSuccess')
-    },
-    {
-        path: '/',
-        component: () => import('@/views/home')
-    },
-    {
-        path: '/book/:type',
-        component: () => import('@/views/book')
+        component: () => import('@/views/user/person/fixpass')
     },
     {
         path: '/tiyan',
-        component: () => import('@/views/tiyan_apply')
+        component: () => import('@/views/user/tiyan_apply')
     },
     {
+        path: "/404",
+        component: () => import('@/views/404')
+    },
+    {
+        path: "*",
+        component: () => import('@/views/404')
+    },
+]
+
+export const userRoutes = [
+    {
+        path: '/',
+        redirect: '/home',
+    },
+    {
+        path: '/home',
+        component: () => import('@/views/user/home'),
+        meta: {
+            title:"小鱼管家-客户端"
+        }
+    },
+    {
+        path: '/findOk',
+        component: () => import('@/views/user/person/fixPassSuccess')
+    },
+    {
+        path: '/book/:type',
+        component: () => import('@/views/user/book/index')
+    },
+    
+    {
         path: '/my_course',
-        component: () => import('@/views/my_course')
+        component: () => import('@/views/user/person/my_course')
     },
     {
         path: '/my',
-        component: () => import('@/views/my')
+        component: () => import('@/views/user/person/my')
     },
     {
         path: '/person',
-        component: () => import('@/views/person')
+        component: () => import('@/views/user/person/person')
     },
     {
         path: "/my_cards",
-        component: () => import('@/views/my_cards')
+        component: () => import('@/views/user/person/my_cards')
     },
     {
         path: "/my_tiyans",
-        component: () => import('@/views/my_tiyans')
+        component: () => import('@/views/user/person/my_tiyans')
     },
     {
         path: "/detail",
-        component: () => import('@/views/detail')
+        component: () => import('@/views/user/book/detail')
     },
     {
         path: "/online/index",
-        component: () => import('@/views/online/index')
+        component: () => import('@/views/user/online/index')
     },
     {
         path: "/online/series",
-        component: () => import('@/views/online/series')
+        component: () => import('@/views/user/online/series')
     },
     {
         path: "/online/alones",
-        component: () => import('@/views/online/alones')
+        component: () => import('@/views/user/online/alones')
     },
     {
         path: "/online/alones_detail/:id",
-        component: () => import('@/views/online/alones_detail')
+        component: () => import('@/views/user/online/alones_detail')
     },
     {
         path: "/online/series_detail/:id",
-        component: () => import('@/views/online/series_detail')
+        component: () => import('@/views/user/online/series_detail')
     },
     {
         path: "/online/video/:id",
-        component: () => import('@/views/online/video')
+        component: () => import('@/views/user/online/video')
     },
     {
         path: "/miaosha",
-        component: () => import('@/views/miaosha/index')
+        component: () => import('@/views/user/miaosha/index')
     },
     {
         path: "/miaosha/:id",
-        component: () => import('@/views/miaosha/detail')
+        component: () => import('@/views/user/miaosha/detail')
     },
     {
         path: "/tuangou",
-        component: () => import('@/views/tuangou/index')
+        component: () => import('@/views/user/tuangou/index')
     },
     {
         path: "/tuangou/:id",
-        component: () => import('@/views/tuangou/detail')
+        component: () => import('@/views/user/tuangou/detail')
     },
     {
         path: "/cards",
-        component: () => import('@/views/cards/index')
+        component: () => import('@/views/user/cards/index')
     },
     {
         path: "/card/:id",
-        component: () => import('@/views/cards/detail')
+        component: () => import('@/views/user/cards/detail')
     },
     {
         path: '/pay/success',
-        component: () => import('@/views/payok')
+        component: () => import('@/views/user/payok')
     },
     {
         path: '/pay/online_success',
-        component: () => import('@/views/pay_online_ok')
+        component: () => import('@/views/user/pay_online_ok')
     },
     {
         path: "/my_orders",
-        component: () => import('@/views/my_orders')
+        component: () => import('@/views/user/person/my_orders')
+    },
+    {
+        path: "*",
+        component: () => import('@/views/404')
     }
 ];
 
-const createRouter = () => new Router({
+export const adminRoutes = [
+    {
+        path: '/',
+        redirect: '/admin'
+    },
+    {
+        path: '/admin',
+        component: () => import('@/views/admin/index'),
+        meta: {
+            title: "管理员系统"
+        }
+    },
+    {
+        path: "*",
+        component: () => import('@/views/404')
+    }
+];
+
+export const createRouter = () => new Router({
     // mode: 'history', // require service support
     scrollBehavior: () => ({
         y: 0
     }),
-    routes: constantRoutes
+    routes: commonRoutes
 })
 
 const router = createRouter()

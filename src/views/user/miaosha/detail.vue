@@ -180,7 +180,7 @@ export default {
 			let amount = this.detail.now_price;
 			let member_id = this.userId;
 			let pay_type = 2;
-			let sell_type = 2;
+			let sell_type = 2; 
 			let sell_type_name = "【线下课程】秒杀-会员卡购买";
 			let times = 0;
 			let expire_date = 0;
@@ -216,6 +216,7 @@ export default {
 					let extra = data.extra;
 
 					options.success = async () => {
+						// 支付成功后将数据插入到表中
 						let result = await weixinApi.payOk({
 							...extra,
 							name,

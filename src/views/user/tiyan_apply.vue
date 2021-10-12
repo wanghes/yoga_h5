@@ -152,14 +152,8 @@ export default {
 			}
 		},
 		async onSubmit() {
-			let {
-				username,
-				phone,
-				course_id,
-				price,
-				start_time,
-				des,
-			} = this.form;
+			let { username, phone, course_id, price, start_time, des } =
+				this.form;
 
 			let res = await course.apply_tiyan({
 				username,

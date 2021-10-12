@@ -7,7 +7,7 @@
                         <van-cell v-for="item in list" :key="item.id" @click="jumpDetailSeries(item.id)">
                             <div class="item">
                                 <div class="left">
-									<van-image fit="cover" :src="item.course_cover"></van-image>
+                                    <van-image fit="cover" :src="item.course_cover"></van-image>
                                 </div>
                                 <div class="info">
                                     <h3 class="title">
@@ -15,17 +15,17 @@
                                     </h3>
                                     <div class="center">
                                         <span v-if="item.pay_type == 1 && item.cu_status" class="cu">促</span>
-										<span v-if="item.pay_type == 1 && item.cu_status" class="price">
-											<em>￥{{item.cu_price.toFixed(2)}}</em>
-										</span>
-										<span v-if="item.price == 0" class="price">免费</span>
-										<span v-else class="price">
-											<del class='del_price' v-if="item.pay_type == 1 && item.cu_status">￥{{item.price.toFixed(2)}}</del>
-											<em v-else-if="item.pay_type == 1">￥{{item.price.toFixed(2)}}</em>
-											<em v-else-if="item.pay_type == 2">￥{{item.price.toFixed(2)}}/天</em>
-											<em v-else-if="item.pay_type == 3">￥{{item.price.toFixed(2)}}/月</em>
-											<em v-else>￥{{item.price.toFixed(2)}}/年</em>
-										</span>
+                                        <span v-if="item.pay_type == 1 && item.cu_status" class="price">
+                                            <em>￥{{item.cu_price.toFixed(2)}}</em>
+                                        </span>
+                                        <span v-if="item.price == 0" class="price">免费</span>
+                                        <span v-else class="price">
+                                            <del class='del_price' v-if="item.pay_type == 1 && item.cu_status">￥{{item.price.toFixed(2)}}</del>
+                                            <em v-else-if="item.pay_type == 1">￥{{item.price.toFixed(2)}}</em>
+                                            <em v-else-if="item.pay_type == 2">￥{{item.price.toFixed(2)}}/天</em>
+                                            <em v-else-if="item.pay_type == 3">￥{{item.price.toFixed(2)}}/月</em>
+                                            <em v-else>￥{{item.price.toFixed(2)}}/年</em>
+                                        </span>
                                     </div>
                                     <div class="remo">
                                         <span>已开课{{item.has_count}}节/共{{item.course_num}}节课</span>
@@ -122,7 +122,7 @@ export default {
 .list_box .van-cell {
 	padding: 15px;
 }
-.list_box .van-image__img{
+.list_box .van-image__img {
 	border-radius: 3px !important;
 }
 </style>            
@@ -171,8 +171,8 @@ export default {
 					margin: 0;
 					margin-bottom: 6px;
 				}
-				
-				.center{
+
+				.center {
 					display: flex;
 					align-items: center;
 				}
@@ -192,15 +192,15 @@ export default {
 				.price {
 					color: #ff5927;
 					font-weight: bold;
-					em{
+					em {
 						font-style: normal;
 					}
-					.del_price{
-						color:#999;
-						margin-left:10px;
+					.del_price {
+						color: #999;
+						margin-left: 10px;
 					}
 				}
-				.remo{
+				.remo {
 					color: #999;
 				}
 			}

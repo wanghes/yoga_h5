@@ -147,9 +147,7 @@ export default {
 			let course_id = this.detail.id;
 			let member_id = this.userId;
 			let pay_type = 1; // 1是微信支付
-			let sell_type = 4; // 4是线下课程购买
 			let sell_type_name = "【线上课程】购买线上课程-单课";
-			// let pay_money = this.detail.pay_money;
 	
 			let remark = `【线上课程】购买课程-${this.detail.course_name}`;
 
@@ -163,6 +161,7 @@ export default {
 				return;
 			}
 
+			// 免费的情况
 			if (amount == 0) {
 				let res = await weixinApi.pay_free_online_Ok({
 					name,
@@ -196,13 +195,13 @@ export default {
 					let extra = data.extra;
 
 					options.success = async () => {
+						// 支付成功后将数据插入到表中
 						let result = await weixinApi.pay_online_Ok({
 							...extra,
 							name,
-                            course_type: 1, // 1是单课，2是系列课
+                            course_type: 1, // 1是单课， 2是系列课
                             course_id,
 							sell_type_name,
-							sell_type,
 							openid,
 							member_id,
 							pay_type,
@@ -217,9 +216,6 @@ export default {
 							    background: "#00B76F"
 							});
 							that.fetchData(course_id);
-							// that.$router.push({
-                            //     path: "/pay/online_success"
-                            // })
 						}
 					};
 					

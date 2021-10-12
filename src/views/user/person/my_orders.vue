@@ -23,7 +23,6 @@
                 <div class="list" v-else>
                     <van-empty description="还没有数据" />
                 </div>
-                
             </van-tab>
             <van-tab title="线下课程">
                 <van-list v-if="list2.length > 0">
@@ -85,8 +84,7 @@ export default {
             if (name == 0) {
                 this.fetchData(1);
                 return;
-            } 
-
+            }
             this.fetchData(2);
         },
         jump(num) {

@@ -71,7 +71,7 @@ export function getUser(params) {
 
 export function getUserByOpenId(params) {
     return request({
-        url: '/index/member/query_by_openid',
+        url: '/index/member/query_user_by_openid',
         method: 'get',
         params
     });

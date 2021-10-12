@@ -3,7 +3,7 @@
         <div class="video_box" v-if="requestDone && buyQueryStatus && buyStatus">
             <video-player :options="videoOptions" />
         </div>
-		<div  v-else>
+		<div v-else>
 			<img class="theme" :src="detail.course_cover" alt="">
 		</div>
         <div class="title">

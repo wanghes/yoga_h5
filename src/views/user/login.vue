@@ -96,6 +96,8 @@ export default {
 				cookie.set("user_phone", data.phone);
 				cookie.set("user_head", data.head);
 				cookie.set("user_name", data.name);
+				cookie.set("user_openid", data.openid);
+				window.AuthType = "user";
 
 				this.$router.push({
 					path: "/",
@@ -119,6 +121,7 @@ export default {
 				cookie.set("user_token", data.token);
 				cookie.set("user_phone", data.phone);
 				cookie.set("user_head", data.head);
+				cookie.set("user_openid", data.openid);
 				cookie.set("user_name", data.name);
 
 				this.$router.push({

@@ -156,8 +156,7 @@ export default {
 				res.data.forEach(item => {
 					if (item.book_course_type == 1) {
 						let start_date = item.start_date.slice(0, 10);
-						let str =
-							start_date + " " + item.schedule_start_time + ":00";
+						let str = start_date + " " + item.schedule_start_time + ":00";
 						let timeObj = getTimeStamp(str);
 						item.timeStamp = timeObj.timeStamp;
 						item.weekDay = timeObj.weekDay;
