@@ -5,7 +5,7 @@
                 <img @click="toPerson" class="avatar" v-if="user.head" :src="user.head" alt="">
                 <img @click="toPerson" class="avatar" v-else :src="head" alt="">
                 <span @click="toPerson">{{user.name}}</span>
-                <!-- <span class="tuichu" @click="logout">退出</span> -->
+                <span class="tuichu" @click="logout">退出</span>
             </div>
 			<div class="user" v-else></div>
             <div class="f_in">
@@ -358,6 +358,10 @@ export default {
 		logout() {
 			cookie.del("user_id");
 			cookie.del("user_token");
+			cookie.del("user_name");
+			cookie.del("user_openid");
+			cookie.del("user_head");
+			cookie.del("user_phone");
 			setTimeout(() => {
 				this.$router.replace({ path: "/" });
 			}, 500);

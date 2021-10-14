@@ -19,7 +19,7 @@ const crossLogin = async (openId, to, from, next) => {
     let userInfo = await userApi.getUserByOpenId({
         openid: openId
     });
-    //console.log("userInfo = " + JSON.stringify(userInfo))
+    console.log("userInfo = " + JSON.stringify(userInfo))
     if (userInfo.code == 200 && !!userInfo.data && userInfo.data.userType == 2) {
         let loginInfo = await userApi.wxLogin({
             phone: userInfo.data.phone,
@@ -46,11 +46,13 @@ const crossLogin = async (openId, to, from, next) => {
         }
         return;
     }
+
     // 2.再确认该用户是不是场馆主用户
     let venuesInfo = await venuesApi.venuesQueryUserByOpenId({
         openid: openId
     });
     // userType = 1 馆主用户, userType = 2 普通用户
+    console.log("venuesInfo = " + JSON.stringify(venuesInfo))
     if (venuesInfo.code == 200 && !!venuesInfo.data && venuesInfo.data.userType == 1) {
         let loginInfo = await venuesApi.venuesWxLogin({
             phone: venuesInfo.data.phone,
@@ -79,6 +81,7 @@ const crossLogin = async (openId, to, from, next) => {
     
     // 如果两种类型用户都没有注册过，则跳转到 普通的成员用户登录页面
     router.addRoutes(userRoutes);
+    window.AuthType = "none";
     next({
         ...to,
         replace: true
@@ -90,8 +93,12 @@ const whiteList = ['/home','/login', '/forget', '/tiyan', '/register', '/404'];
 router.beforeEach(async (to, from, next) => {
     document.title = to.meta && to.meta.title || "小鱼管家";
     const CookieOpenID = cookie.get('user_openid');
+    // console.log("CookieOpenID = " + CookieOpenID);
+    // console.log("AuthType = " + window.AuthType);
 
-    if (!!window.AuthType && window.AuthType == 'user') {
+    if (!!window.AuthType && window.AuthType == 'none') {
+        next();
+    } else if (!!window.AuthType && window.AuthType == 'user') {
         next();
     } else if (!!window.AuthType && window.AuthType == 'admin') {
         next();
@@ -113,11 +120,25 @@ router.beforeEach(async (to, from, next) => {
             } else {
                 // code 存在 通过code进行微信认证授权，获取用户的openid
                 let res = await weixin.getAuth({
-                    QueryCode
+                    code: QueryCode
                 });
                 if (res.code == 200 && !!res.data) {
                     const ACCESS_TOKEN = res.data.access_token;
                     const OPENID = res.data.openid;
+                    
+                    let wxUser = await weixin.getUser({
+                        openid: OPENID,
+                        access_token: ACCESS_TOKEN
+                    });
+
+                    if (wxUser.code == 200 && wxUser.data) {
+                        cookie.set("weixin_nickname",  wxUser.data.nickname);
+                        cookie.set("weixin_openid",  wxUser.data.openid);
+                        cookie.set("weixin_headimgurl",  wxUser.data.headimgurl);
+                    }
+                    // console.log(wxUser)
+                    // console.log("OPENID = " + OPENID);
+                    // 先去判断是否可以登录，用户已经存在就能登录
                     crossLogin(OPENID, to, from, next);
                 } else {
                     // http://localhost:8080/?aid=LYK03fc5rP&code=1&type=app#/
@@ -126,6 +147,7 @@ router.beforeEach(async (to, from, next) => {
                         crossLogin('oz3jNt3hGT_qqdUWFCnxn7_gzjWA1', to, from, next);
                         next();
                     }
+                    console.log("Auth认证未知错误")
                     next();
                 }
             }

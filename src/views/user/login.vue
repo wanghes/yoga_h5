@@ -2,8 +2,8 @@
     <div class="wrap login_box">
         <!-- <h3 class="title">手机帐号登录</h3> -->
         <div class="tab_menu">
+			<span @click="tabClick(2)" :class="tab_02_show ? 'active': ''">短信登录</span>
             <span @click="tabClick(1)" :class="tab_01_show ? 'active': ''">密码登录</span>
-            <span @click="tabClick(2)" :class="tab_02_show ? 'active': ''">短信登录</span>
         </div>
 
         <div class="tab_content">
@@ -65,8 +65,8 @@ export default {
 			password: "",
 			vcode: "",
 			verification_key: "",
-			tab_01_show: true,
-			tab_02_show: false,
+			tab_01_show: false,
+			tab_02_show: true,
 			init_password: "",
 			sending: false,
 			seconds: 60,
@@ -127,6 +127,10 @@ export default {
 				this.$router.push({
 					path: "/",
 				});
+			} else if (res.code == 1000) { // 还未注册
+				this.$router.push({
+					path: "/register",
+				});
 			}
 		},
 		toHome() {
@@ -145,6 +149,15 @@ export default {
 				this.$notify({
 					message: "请填写手机号",
 					color: "#ffffff",
+				});
+				return;
+			}
+			let reg_tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+			
+			if (!reg_tel.test(phone)) {
+				this.$notify({
+					message: "请填写正确的手机号",
+					color: "#ffffff"
 				});
 				return;
 			}
@@ -182,7 +195,7 @@ export default {
 			}
 		},
 		toRegister() {
-			this.$router.replace({
+			this.$router.push({
 				path: "/register",
 			});
 		},

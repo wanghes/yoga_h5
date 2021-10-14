@@ -314,7 +314,7 @@ export default {
 						type: "danger",
 					});
 					setTimeout(() => {
-						this.$router.replace({
+						this.$router.push({
 							path: "/login",
 						});
 					}, 1000);
@@ -333,7 +333,7 @@ export default {
 						type: "danger",
 					});
 					setTimeout(() => {
-						this.$router.replace({
+						this.$router.push({
 							path: "/login",
 						});
 					}, 1000);

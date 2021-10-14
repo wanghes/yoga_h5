@@ -209,10 +209,10 @@ export default {
             }
 
 			if (!openid) {
-				this.$toast("获取用户信息失败");
+				this.$toast("请先登录");
                 this.$router.push({
                     path: '/login'
-                })
+                });
 				return;
 			}
 

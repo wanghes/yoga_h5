@@ -125,6 +125,7 @@ import { getTimeStamp } from "@/utils/index";
 const teacherHead = require("@/assets/img/teacher.png");
 const book = require("@/api/book");
 import { cookie } from "@/utils/index";
+
 export default {
 	data() {
 		return {
@@ -137,11 +138,23 @@ export default {
 	},
 	mounted() {
 		let book_member_id = cookie.get("user_id");
-		this.member_id = book_member_id;
-		this.fetchData({
-			qiandao_status: 0,
-			book_member_id,
-		});
+		if (book_member_id) { 
+			this.member_id = book_member_id;
+			this.fetchData({
+				qiandao_status: 0,
+				book_member_id,
+			});
+		} else {
+			this.$notify({
+				message: "请先登录",
+				type: "danger",
+			});
+			setTimeout(() => {
+				this.$router.replace({
+					path: "/login",
+				});
+			}, 1000);
+		}
 	},
 	methods: {
 		async fetchData(params) {

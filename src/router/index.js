@@ -37,6 +37,7 @@ const commonRoutes = [
         path: '/tiyan',
         component: () => import('@/views/user/tiyan_apply')
     },
+    
     {
         path: "/404",
         component: () => import('@/views/404')
@@ -67,7 +68,6 @@ export const userRoutes = [
         path: '/book/:type',
         component: () => import('@/views/user/book/index')
     },
-    
     {
         path: '/my_course',
         component: () => import('@/views/user/person/my_course')
