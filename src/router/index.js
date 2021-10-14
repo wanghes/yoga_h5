@@ -171,6 +171,41 @@ export const adminRoutes = [
         }
     },
     {
+        path: "/manage",
+        component: () => import('@/views/admin/manage'),
+        meta: {
+            title: "管理后台"
+        }
+    },
+    {
+        path: "/members",
+        component: () => import('@/views/admin/members'),
+        meta: {
+            title: "学员列表"
+        }
+    },
+    {
+        path: "/profit",
+        component: () => import('@/views/admin/profit'),
+        meta: {
+            title: "收入列表"
+        }
+    },
+    {
+        path: "/orders",
+        component: () => import('@/views/admin/orders'),
+        meta: {
+            title: "订单列表"
+        }
+    },
+    {
+        path: "/my",
+        component: () => import('@/views/admin/my'),
+        meta: {
+            title: "我的"
+        }
+    },
+    {
         path: "*",
         component: () => import('@/views/404')
     }

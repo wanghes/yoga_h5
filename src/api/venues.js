@@ -24,3 +24,22 @@ export function venuesQueryUserByOpenId(data) {
         data
     });
 }
+
+export function fetchVenues(data) {
+    return request({
+        url: '/venues/venues/query_by_admin_user_id',
+        method: 'post',
+        data
+    });
+}
+
+
+
+export function fetchOrders(data) {
+    return request({
+        url: '/venues/venues/fetch_orders',
+        method: 'post',
+        data
+    });
+}
+

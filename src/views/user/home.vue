@@ -318,7 +318,6 @@ export default {
 							path: "/login",
 						});
 					}, 1000);
-
 					return;
 				}
 				this.$router.push({

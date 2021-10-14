@@ -5,7 +5,9 @@ import '@/assets/less/style.less';
 import router from './router'
 import { Notify } from 'vant';
 import { Empty } from 'vant';
+import VueClipboard from 'vue-clipboard2'
 import { Lazyload } from 'vant';
+import { DatetimePicker } from 'vant';
 
 import './permission'
 
@@ -15,6 +17,8 @@ Vue.use(Notify);
 Vue.use(Lazyload);
 Vue.use(Empty);
 Vue.use(VanImage);
+Vue.use(DatetimePicker);
+Vue.use(VueClipboard)
 Vue.config.productionTip = false
 
 import App from './App.vue'

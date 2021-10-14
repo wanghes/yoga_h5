@@ -19,7 +19,7 @@ const crossLogin = async (openId, to, from, next) => {
     let userInfo = await userApi.getUserByOpenId({
         openid: openId
     });
-    console.log("userInfo = " + JSON.stringify(userInfo))
+    // console.log("userInfo = " + JSON.stringify(userInfo))
     if (userInfo.code == 200 && !!userInfo.data && userInfo.data.userType == 2) {
         let loginInfo = await userApi.wxLogin({
             phone: userInfo.data.phone,
@@ -52,7 +52,7 @@ const crossLogin = async (openId, to, from, next) => {
         openid: openId
     });
     // userType = 1 馆主用户, userType = 2 普通用户
-    console.log("venuesInfo = " + JSON.stringify(venuesInfo))
+    // console.log("venuesInfo = " + JSON.stringify(venuesInfo))
     if (venuesInfo.code == 200 && !!venuesInfo.data && venuesInfo.data.userType == 1) {
         let loginInfo = await venuesApi.venuesWxLogin({
             phone: venuesInfo.data.phone,
@@ -122,6 +122,7 @@ router.beforeEach(async (to, from, next) => {
                 let res = await weixin.getAuth({
                     code: QueryCode
                 });
+                
                 if (res.code == 200 && !!res.data) {
                     const ACCESS_TOKEN = res.data.access_token;
                     const OPENID = res.data.openid;
@@ -144,7 +145,7 @@ router.beforeEach(async (to, from, next) => {
                     // http://localhost:8080/?aid=LYK03fc5rP&code=1&type=app#/
                     if (QueryCode == 1) {
                         console.log("测试中")
-                        crossLogin('oz3jNt3hGT_qqdUWFCnxn7_gzjWA1', to, from, next);
+                        crossLogin('oz3jNt3hGT_qqdUWFCnxn7_gzjWA', to, from, next);
                         next();
                     }
                     console.log("Auth认证未知错误")
