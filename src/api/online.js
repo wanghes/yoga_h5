@@ -60,11 +60,6 @@ export function query_jingpin_series_class(params) {
     });
 }
 
-
-
-
-
-
 export function series_list(params) {
     return request({
         url: '/index/online/series',

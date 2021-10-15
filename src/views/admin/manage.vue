@@ -4,7 +4,9 @@
         <div class="top">
             <h3>您的后台管理地址</h3>
             <div class="shuru"><input :value="link" readonly /></div>
+            
             <van-button round block type="danger" size="normal" v-clipboard:copy="link" v-clipboard:success="onCopy" v-clipboard:error="onError">复制</van-button>
+            <div class="tip">您的登录初始密码为手机号后六位，为了保护您的账户安全请尽快修改您的密码</div>
         </div>
         <van-tabbar v-model="active" active-color="#FF5926" @change="onChange" inactive-color="#000">
             <van-tabbar-item icon="shop">场馆信息</van-tabbar-item>
@@ -97,5 +99,10 @@ export default {
 			}
 		}
 	}
+    .tip{
+        padding:15px;
+        font-size: 12px;
+        color: #666;
+    }
 }
 </style>
