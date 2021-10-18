@@ -1,7 +1,7 @@
 <template>
     <div class="wrap admin_profit">
-        <van-tabs @click="onClick" type="card">
-            <van-tab title="购买课程收入" name="1">
+        <!-- <van-tabs @click="onClick" type="card">
+            <van-tab title="购买课程收入" name="1"> -->
                 <div class="box">
                     <van-field readonly clickable name="picker" right-icon="arrow-down" :value="value" placeholder="选择日期日期" @click="showPicker = true" />
                     <van-popup v-model="showPicker" position="bottom">
@@ -25,10 +25,10 @@
                         </van-cell>
                     </van-list>
                 </div>
-            </van-tab>
+            <!-- </van-tab>
             <van-tab title="购买会员卡收入" name="2">
             </van-tab>
-        </van-tabs>
+        </van-tabs> -->
     </div>
 </template>
 
@@ -66,7 +66,7 @@ export default {
 		async fetchData(type) {
 			let admin_user_id = cookie.get("admin_user_id");
 			if (type == 1) {
-				let res = await venues.fetchOrders({
+				let res = await venues.fetchBills({
 					admin_user_id,
 					page: this.currentPage,
 					pageSize: this.pageSize,

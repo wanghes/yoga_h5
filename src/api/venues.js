@@ -34,10 +34,26 @@ export function fetchVenues(data) {
 }
 
 
-
 export function fetchOrders(data) {
     return request({
         url: '/venues/venues/fetch_orders',
+        method: 'post',
+        data
+    });
+}
+
+export function fetchBills(data) {
+    return request({
+        url: '/venues/venues/fetch_bills',
+        method: 'post',
+        data
+    });
+}
+
+
+export function fetchMembers(data) {
+    return request({
+        url: '/venues/venues/fetch_members',
         method: 'post',
         data
     });
