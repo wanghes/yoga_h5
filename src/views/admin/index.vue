@@ -7,7 +7,7 @@
 			</div>
 			<div class="list">
 				<div class="title">品牌介绍</div>
-				<div class="intro">{{info.des}}</div>
+				<div class="intro" v-html="info.des"></div>
 			</div>
 			<div class="list">
 				<div class="title">营业时间</div>

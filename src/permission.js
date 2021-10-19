@@ -93,8 +93,8 @@ const whiteList = ['/home','/login', '/forget', '/tiyan', '/register', '/404'];
 router.beforeEach(async (to, from, next) => {
     document.title = to.meta && to.meta.title || "小鱼管家";
     const CookieOpenID = cookie.get('user_openid');
-    // console.log("CookieOpenID = " + CookieOpenID);
-    // console.log("AuthType = " + window.AuthType);
+    console.log("CookieOpenID = " + CookieOpenID);
+    console.log("AuthType = " + window.AuthType);
 
     if (!!window.AuthType && window.AuthType == 'none') {
         next();
