@@ -277,7 +277,7 @@ export default {
 					}
 				}
 				// console.log(this.mainCard)
-			}
+			} 
 
 			let tiyanRes = await course.get_tiyan_list({
 				phone: this.user.phone,

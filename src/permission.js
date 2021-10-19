@@ -42,6 +42,20 @@ const crossLogin = async (openId, to, from, next) => {
                 replace: true
             });
         } else {
+            let user_openid = cookie.get('user_openid');
+            if (user_openid) {
+                cookie.del("user_id");
+                cookie.del("user_token");
+                cookie.del("user_name");
+                cookie.del("user_openid");
+                cookie.del("user_head");
+                cookie.del("user_phone");
+                next({
+                    ...to,
+                    replace: true
+                });
+                return;
+            }
             next();
         }
         return;
@@ -74,6 +88,20 @@ const crossLogin = async (openId, to, from, next) => {
                 replace: true
             });
         } else {
+            let user_openid = cookie.get('user_openid');
+            if (user_openid) {
+                cookie.del("admin_user_id");
+                cookie.del("user_token");
+                cookie.del("user_name");
+                cookie.del("user_openid");
+                cookie.del("user_head");
+                cookie.del("user_phone");
+                next({
+                    ...to,
+                    replace: true
+                });
+                return;
+            }
             next();
         }
         return;
