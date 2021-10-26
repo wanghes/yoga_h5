@@ -18,7 +18,7 @@ const commonRoutes = [
         path: '/home',
         component: () => import('@/views/user/home'),
         meta: {
-            title:"小鱼管家-客户端"
+            title:"小鱼管家"
         }
     },
     {

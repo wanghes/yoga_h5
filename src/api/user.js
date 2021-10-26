@@ -69,11 +69,11 @@ export function getUser(params) {
 }
 
 
-export function getUserByOpenId(params) {
+export function getUserByOpenId(data) {
     return request({
         url: '/index/member/query_user_by_openid',
-        method: 'get',
-        params
+        method: 'post',
+        data
     });
 }
 

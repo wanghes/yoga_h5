@@ -5,7 +5,7 @@ import {
 import {
     BASEURL
 } from "@/utils/config"
-import { Notify } from 'vant';
+import { Toast } from 'vant';
 import Router from '@/router/index'
 
 const service = axios.create({
@@ -39,28 +39,29 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         const res = response.data;
+         // console.log(res)
         if (res.code !== 200) {
             if (res.code == 401) {
-                Notify({
+                Toast({
                     message: res.msg || 'Error',
-                    type: 'danger',
-                    duration: 5 * 1000
+                    duration: 3 * 1000
                 });
-                cookie.del('user_id')
-                cookie.del('user_token')
+                cookie.del('user_id');
+                cookie.del('user_token');
                 setTimeout(() => {
-                    Router.push({path: '/login'})
-                }, 1500);
+                    Router.push({path: '/login'});
+                }, 0);
+                return res;
+            } else if (res.code == 90001) {
+                // 这里不排除错误的地方
+                return res;
             }
-            Notify({
-                message: res.msg || 'Error',
-                type: 'danger',
-                duration: 5 * 1000
+            Toast({
+                message: res.msg || "未知错误，联系管理员",
+                duration: 3 * 1000
             });
             return res;
-           
         } else  {
-           
             return res;
         }
     },
@@ -74,24 +75,22 @@ service.interceptors.response.use(
              * 需要重新登录
              */
             if (res.code === 401) {
-                Notify({
+                Toast({
                     message: "请先登录" || 'Error',
-                    type: 'danger',
-                    duration: 5 * 1000
+                    duration: 3 * 1000
                 });
                 cookie.del('user_id')
                 cookie.del('user_token')
                 setTimeout(() => {
                     Router.push({path: '/login'})
-                }, 1500);
-                
+                }, 0);
             }
         } else {
-            Notify({
-                message: error.message,
-                type: 'danger',
-                duration: 5 * 1000
+            Toast({
+                message: res.msg || "未知错误，联系管理员",
+                duration: 3 * 1000
             });
+            // console.log(res.msg || 'Error')
             return Promise.reject(error);
         }
     }

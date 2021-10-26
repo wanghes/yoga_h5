@@ -103,13 +103,21 @@ export default {
 		async fetchVcode() {
 			const phone = this.phone;
 			if (!phone) {
-				this.$notify({
-					message: "请填写手机号",
-					color: "#ffffff",
+				this.$toast({
+					message: "请填写手机号"
+				});
+				return;
+			}
+			let reg_tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+			
+			if (!reg_tel.test(phone)) {
+				this.$toast({
+					message: "请填写正确的手机号"
 				});
 				return;
 			}
 			this.startReadSeconds();
+		
 			let res = await user.getVcode({
 				phone: phone,
 			});
@@ -140,15 +148,15 @@ export default {
 			let openid = this.openid;
 
 			if (!name) {
-				this.$notify({
-					message: "请填写用户姓名",
+				this.$toast({
+					message: "请填写用户姓名"
 				});
 				return;
 			}
 
 			if (!phone) {
-				this.$notify({
-					message: "请填写手机号",
+				this.$toast({
+					message: "请填写手机号"
 				});
 				return;
 			}

@@ -116,13 +116,13 @@ const crossLogin = async (openId, to, from, next) => {
     });
 }
 
-const whiteList = ['/home','/login', '/forget', '/tiyan', '/register', '/404'];
+// const whiteList = ['/home','/login', '/forget', '/tiyan', '/register', '/404'];
 
 router.beforeEach(async (to, from, next) => {
     document.title = to.meta && to.meta.title || "小鱼管家";
     const CookieOpenID = cookie.get('user_openid');
-    console.log("CookieOpenID = " + CookieOpenID);
-    console.log("AuthType = " + window.AuthType);
+    // console.log("CookieOpenID = " + CookieOpenID);
+    // console.log("AuthType = " + window.AuthType);
 
     if (!!window.AuthType && window.AuthType == 'none') {
         next();
@@ -165,16 +165,15 @@ router.beforeEach(async (to, from, next) => {
                         cookie.set("weixin_openid",  wxUser.data.openid);
                         cookie.set("weixin_headimgurl",  wxUser.data.headimgurl);
                     }
-                    // console.log(wxUser)
-                    // console.log("OPENID = " + OPENID);
                     // 先去判断是否可以登录，用户已经存在就能登录
                     crossLogin(OPENID, to, from, next);
                 } else {
-                    // http://localhost:8080/?aid=LYK03fc5rP&code=1&type=app#/
+                    // http://localhost:8080/?aid=LYK03fc5rP&code=1&type=app
                     if (QueryCode == 1) {
                         console.log("测试中")
                         crossLogin('oz3jNt3hGT_qqdUWFCnxn7_gzjWA', to, from, next);
                         next();
+                        return;
                     }
                     console.log("Auth认证未知错误")
                     next();

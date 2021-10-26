@@ -9,7 +9,8 @@
                 </div>
                 <div class="form_item">
                     <input v-model="vcode" placeholder="请输入验证码" type="text" />
-                    <span class="last" @click="fetchVcode">获取验证码</span>
+					<span class="last" v-if="!sending" @click="fetchVcode">获取验证码</span>
+                    <span class="last" v-else>还剩 {{seconds}} 秒</span>
                 </div>
                 <div class="form_item">
                     <input v-model="password" placeholder="设定新密码(6位或以上）" type="password" />
@@ -36,6 +37,8 @@ export default {
 			password: "",
 			vcode: "",
 			verification_key: "",
+			sending: false,
+			seconds: 60
 		};
 	},
 	mounted() {
@@ -75,6 +78,18 @@ export default {
 				});
 				return;
 			}
+			let reg_tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+			
+			if (!reg_tel.test(phone)) {
+				this.$notify({
+					message: "请填写正确的手机号",
+					color: "#ffffff"
+				});
+				return;
+			}
+
+			this.startReadSeconds();
+
 			let res = await user.getVcode({
 				phone: phone,
 			});
@@ -82,6 +97,19 @@ export default {
 				cookie.set("verification_key", res.data.verification_key);
 				this.verification_key = res.data.verification_key;
 			}
+		},
+		startReadSeconds() {
+			this.sending = true;
+			var timer = setInterval(() => {
+				if (this.seconds == 0) {
+					clearInterval(timer);
+					timer = null;
+					this.sending = false;
+					this.seconds = 60;
+					return;
+				}
+				this.seconds = this.seconds - 1;
+			}, 1000);
 		},
 		toRegister() {
 			this.$router.replace({
