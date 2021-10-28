@@ -180,12 +180,17 @@ export default {
 
 			if (res.code == 200) {
 				let { init_password } = res.data;
-				this.$router.replace({
-					path: "/login",
-					query: {
-						init_password,
-					},
+				this.$toast({
+					message: "注册成功，正在为您跳转登录..."
 				});
+				setTimeout(() => {
+					this.$router.replace({
+						path: "/login",
+						query: {
+							init_password,
+						},
+					});
+				}, 1000)	
 			}
 		},
 		onConfirm(value) {

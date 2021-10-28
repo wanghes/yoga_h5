@@ -11,7 +11,19 @@ const venuesApi = require("@/api/venues");
 window.AuthType = "";
 const QueryParams = getQueryParams(location.href);
 const QueryCode = QueryParams.code;
-window.venues = QueryParams.aid;
+
+window.venues = "";
+if (QueryParams.aid) {
+    if (QueryParams.aid.indexOf('#')>-1) {
+        let arr = QueryParams.aid.split('#');
+        window.venues = arr[0];
+    } else {
+        window.venues = QueryParams.aid;
+    }   
+}
+console.log(window.venues)
+
+
 
 // 直接登录操作
 const crossLogin = async (openId, to, from, next) => {

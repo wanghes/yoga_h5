@@ -102,6 +102,10 @@ export default {
 				this.$router.push({
 					path: "/",
 				});
+			} else if (res.code == 1000) { // 还未注册
+				this.$router.push({
+					path: "/register",
+				});
 			}
 		},
 		async smsSubmit() {

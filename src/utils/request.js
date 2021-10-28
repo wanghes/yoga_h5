@@ -26,6 +26,7 @@ service.interceptors.request.use(
         if (user_id) {
             config.headers['UserId'] = user_id;
         }
+        
         config.headers['VenuesID'] = window.venues;
         return config;
     },

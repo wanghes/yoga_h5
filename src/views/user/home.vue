@@ -223,6 +223,7 @@ export default {
 			});
 			if (res.code == 200) {
 				this.focuses = res.data;
+				console.log(this.focuses);
 			}
 		},
 		async fetchTeacher() {

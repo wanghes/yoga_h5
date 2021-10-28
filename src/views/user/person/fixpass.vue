@@ -33,7 +33,7 @@ const user = require("@/api/user");
 export default {
 	data() {
 		return {
-			phone: "15810849752",
+			phone: "",
 			password: "",
 			vcode: "",
 			verification_key: "",
@@ -61,6 +61,10 @@ export default {
 			if (res.code == 200) {
 				this.$router.push({
 					path: "/findOk",
+				});
+			} else if (res.code == 1000) { // 还未注册
+				this.$router.push({
+					path: "/register"
 				});
 			}
 		},
