@@ -18,7 +18,7 @@
                     </div>
                     <van-notice-bar v-if="!!init_password" wrapable>尊敬的用户您的初始密码是：{{init_password}}，请登录后尽快修改您的密码</van-notice-bar>
                     <div style="margin-top: 50px">
-                        <van-button round block type="info" @click="onSubmit" native-type="submit">提交</van-button>
+                        <van-button round block type="primary" @click="onSubmit" native-type="submit">提交</van-button>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                         <span class="last" v-else>还剩 {{seconds}} 秒</span>
                     </div>
                     <div style="margin-top: 50px">
-                        <van-button round block type="info" @click="smsSubmit" native-type="submit">提交</van-button>
+                        <van-button round block type="primary" @click="smsSubmit" native-type="submit">提交</van-button>
                     </div>
                 </div>
             </div>
@@ -206,12 +206,7 @@ export default {
 	},
 };
 </script>
-<style>
-.login_box .van-button--info {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
-}
-</style>
+
 <style lang="less" scoped>
 .login_box {
 	padding: 30px;

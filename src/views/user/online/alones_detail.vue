@@ -38,7 +38,7 @@
         </div>
 
         <div class="btn" v-if="buyQueryStatus && !buyStatus">
-            <van-button block type="info" @click="sSubmit" native-type="submit">
+            <van-button block type="primary" @click="sSubmit" native-type="submit">
 				<img :src="huo" class="huo" alt="">
                 <span>立即抢购</span>
                 <span class="money" v-if="detail.pay_money == 0">免费</span>
@@ -46,7 +46,7 @@
             </van-button>
         </div>
 		<div class="btn" v-else>
-			<van-button block type="info" @click="gotoClass" native-type="submit">
+			<van-button block type="primary" @click="gotoClass" native-type="submit">
 				<span>进入课程</span>
 			</van-button>
 		</div>
@@ -235,36 +235,7 @@ export default {
 		},
 	},
 };
-</script>
-<style>
-.detail_box .van-tabs--line .van-tabs__wrap {
-	border-bottom: 1px solid #efefef;
-}
-.detail_box .van-tabs__line {
-	background-color: #ff5927;
-}
-.detail_box .van-cell {
-	padding: 15px;
-}
-.detail_box .van-tab__pane {
-	padding: 15px 0;
-}
-.detail_box .van-tab__pane img {
-	max-width: 100%;
-}
-.detail_box .van-button--info {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
-}
-.detail_box .van-button--normal{
-	font-size: 18px;
-	font-weight: bold;
-}
-.detail_box .van-button__text{
-	display: flex;
-	align-items: flex-end;
-}
-</style>   
+</script> 
 
 <style lang="less" scoped>
 .top {

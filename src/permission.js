@@ -8,11 +8,12 @@ const weixin = require("@/api/weixin");
 const userApi = require("@/api/user");
 const venuesApi = require("@/api/venues");
 
+window.venues = "";
 window.AuthType = "";
 const QueryParams = getQueryParams(location.href);
-const QueryCode = QueryParams.code;
+let QueryCode = QueryParams.code;
 
-window.venues = "";
+
 if (QueryParams.aid) {
     if (QueryParams.aid.indexOf('#')>-1) {
         let arr = QueryParams.aid.split('#');
@@ -21,9 +22,13 @@ if (QueryParams.aid) {
         window.venues = QueryParams.aid;
     }   
 }
-console.log(window.venues)
 
-
+if (QueryCode) {
+    if (QueryCode.indexOf('#')>-1) {
+        let arr = QueryCode.split('#');
+        QueryCode = arr[0];
+    }
+}
 
 // 直接登录操作
 const crossLogin = async (openId, to, from, next) => {
@@ -181,6 +186,7 @@ router.beforeEach(async (to, from, next) => {
                     crossLogin(OPENID, to, from, next);
                 } else {
                     // http://localhost:8080/?aid=LYK03fc5rP&code=1&type=app
+                    console.log(QueryCode)
                     if (QueryCode == 1) {
                         console.log("测试中")
                         crossLogin('oz3jNt3hGT_qqdUWFCnxn7_gzjWA', to, from, next);

@@ -4,10 +4,6 @@
         <van-divider />
         <van-form @submit="onSubmit">
             <van-field readonly clickable name="picker" :value="form.jigou" label="机构" />
-            <!-- <van-field readonly clickable name="picker" :value="form.jigou" label="机构" placeholder="点击选择机构" @click="showJigouPicker = true" /> -->
-            <!-- <van-popup v-model="showJigouPicker" position="bottom">
-                <van-picker show-toolbar :columns="jigous" />
-            </van-popup> -->
             <van-field readonly clickable name="course_id" :value="form.course_name" label="课程" placeholder="点击选择课程" @click="showCoursePicker = true" />
             <van-popup v-model="showCoursePicker" position="bottom">
                 <van-picker show-toolbar @confirm="onConfirmCourse" value-key="name" :columns="courses" />
@@ -21,7 +17,7 @@
             <van-field v-model="form.phone" name="phone" label="手机" placeholder="手机必填" :rules="[{ required: true, message: '请输入手机' }]" />
             <van-field v-model="form.des" rows="4" autosize label="留言" type="textarea" maxlength="100" placeholder="请输入留言" show-word-limit />
             <div style="margin: 16px;">
-                <van-button round block type="info" native-type="submit">申请体验</van-button>
+                <van-button round block type="primary" native-type="submit">申请体验</van-button>
                 <van-divider />
                 <van-button round block type="default" @click="cancel">取 消</van-button>
             </div>
@@ -59,7 +55,7 @@ export default {
 				icon_08,
 				icon_09,
 			},
-			showJigouPicker: false,
+		
 			showCoursePicker: false,
 			showTimePicker: false,
 			times: [
@@ -76,9 +72,8 @@ export default {
 				"19:00",
 			],
 			courses: [],
-			jigous: ["北京瑜老师瑜伽馆"],
 			form: {
-				jigou: "北京瑜老师瑜伽馆",
+				jigou: "",
 				username: cookie.get("user_name") || "",
 				start_time: "",
 				price: 0,
@@ -199,11 +194,5 @@ export default {
 		color: #333;
 		text-align: center;
 	}
-}
-</style>
-<style>
-.tiyan_box .van-button--info {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
 }
 </style>

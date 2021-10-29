@@ -217,13 +217,12 @@ export default {
 			});
 			if (res.code == 200) {
 				this.focuses = res.data;
-				console.log(this.focuses);
 			}
 		},
 		async fetchTeacher() {
 			Toast.loading({
 				message: "加载中...",
-				forbidClick: true,
+				forbidClick: true
 			});
 			let res = await teacher.list({
 				page: 1,
@@ -349,11 +348,7 @@ export default {
 	},
 };
 </script>
-<style>
-.home .van-swipe__indicators {
-	bottom: 140px;
-}
-</style>
+
 <style lang="less" scoped>
 .home {
 	width: 100%;

@@ -81,7 +81,7 @@
                 <span class="fuhao">￥</span>
                 <span class="money">{{detail.price && detail.price.toFixed(2)}}</span>
             </div>
-            <van-button class="right_btn" block type="info" @click="sSubmit" native-type="submit">立即抢购</van-button>
+            <van-button class="right_btn" block type="primary" @click="sSubmit" native-type="submit">立即抢购</van-button>
         </div>
 
     </div>
@@ -248,12 +248,7 @@ export default {
 	},
 };
 </script>
-<style>
-.card_detail .van-button--info {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
-}
-</style>
+
 <style lang="less" scoped>
 .btn {
 	position: fixed;

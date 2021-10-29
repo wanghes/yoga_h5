@@ -79,7 +79,7 @@
                 <van-datetime-picker v-model="currentDate" type="year-month" title="选择年月" @confirm="onConfirm" @cancel="showPicker = false" :formatter="formatter" />
             </van-popup>
             <van-divider />
-            <div v-if="list.length > 0" class="list_box">
+            <div v-if="list.length > 0" class="my_list_box">
                 <div class="item" v-for="item in list" :key="item.id">
                     <div class="left">
                         <span v-if="item.book_course_type == 1" class="biaoti">{{item.course_name}} - {{item.tuanke_teacher_name}}</span>
@@ -369,6 +369,7 @@ export default {
 	},
 };
 </script>
+
 <style lang="less" scoped>
 .top_info {
 	height: 300px;
@@ -538,7 +539,7 @@ export default {
 		}
 	}
 }
-.list_box {
+.my_list_box {
 	display: flex;
 	flex-direction: column;
 	.item {
@@ -597,7 +598,7 @@ export default {
 </style>
 
 <style>
-.list_box .van-tag {
+.my_list_box .van-tag {
 	line-height: 1;
 }
 </style>

@@ -248,6 +248,7 @@ export default {
 	},
 };
 </script>
+
 <style lang="less" scoped>
 .list {
 	padding: 0 15px;

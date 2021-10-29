@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap list_box">
+    <div class="wrap alones_list_box">
         <div class="box">
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" offset="20" @load="onLoad">
                 <van-cell v-for="item in list" :key="item.id" @click="toDetail(item.id)">
@@ -73,22 +73,10 @@ export default {
 		},
 	},
 };
-</script>
-            
-<style>
-.list_box .van-tabs--line .van-tabs__wrap {
-	border-bottom: 1px solid #e9e9e9;
-}
-.list_box .van-tabs__line {
-	background-color: #ff5927;
-}
-.list_box .van-cell {
-	padding: 15px;
-}
-</style>            
+</script>          
 
 <style lang="less" scoped>
-.list_box {
+.alones_list_box {
 	min-height: 100vh;
 	box-sizing: border-box;
 	.box {

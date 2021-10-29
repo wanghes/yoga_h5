@@ -5,12 +5,13 @@ const myTheme = path.resolve(__dirname, "./src/assets/less/vantChange.less");
 const productionEnv = process.env.NODE_ENV === 'production'
 const Timestamp = Date.now()
 
-console.log(productionEnv);
+console.log(myTheme);
 
 module.exports = {
-    publicPath: './',
+    publicPath: '/',
     productionSourceMap: false,
     filenameHashing: true,
+ 
     css: {
         extract: productionEnv ? {
             filename: `css/[name].${Timestamp}.css`,
@@ -19,13 +20,16 @@ module.exports = {
         loaderOptions: {
             less: {
                 // 若 less-loader 版本小于 6.0，请移除 lessOptions 这一级，直接配置选项。
-                modifyVars: {
-                    // 直接覆盖变量
-                    // 'text-color': '#111',
-                    // 'border-color': '#eee',
-                    // 或者可以通过 less 文件覆盖（文件路径为绝对路径）
-                    hack: `true; @import "${myTheme}";`
-                }
+                // lessOptions: { 
+                    modifyVars: {
+                        // 直接覆盖变量
+                        // "green": "#FF5926",
+                        // 'text-color': '#111',
+                        // 'border-color': '#eee',
+                        // 或者可以通过 less 文件覆盖（文件路径为绝对路径）
+                        hack: `true; @import "${myTheme}";`
+                    }
+                // }
             },
         },
     },
@@ -88,8 +92,8 @@ module.exports = {
     },
     */
     devServer: {
-        disableHostCheck: true
-
+        disableHostCheck: true,
+        historyApiFallback: true
     },
     lintOnSave: false
 }

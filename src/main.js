@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vant, { Image as VanImage } from 'vant';
-import 'vant/lib/index.css';
 import '@/assets/less/style.less';
+import 'vant/lib/index.less';
 import router from './router'
 import { Notify } from 'vant';
 import { Empty } from 'vant';

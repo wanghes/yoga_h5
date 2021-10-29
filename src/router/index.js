@@ -212,7 +212,8 @@ export const adminRoutes = [
 ];
 
 export const createRouter = () => new Router({
-    // mode: 'history', // require service support
+    base: "/",
+    mode: process.env.NODE_ENV === 'production'?'history':"hash", // require service support
     scrollBehavior: () => ({
         y: 0
     }),

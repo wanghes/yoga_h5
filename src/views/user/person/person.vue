@@ -50,15 +50,6 @@
                     <span class="arrow"></span>
                 </div>
             </div>
-            <!-- <div class="item">
-                <div class="left">
-                    <span class="label">用户ID</span>
-                </div>
-                <div class="right">
-                    <span class="text">1238443</span>
-                    <span class="arrow"></span>
-                </div>
-            </div> -->
             <div class="item">
                 <div class="left">
                     <span class="label">注册时间</span>
@@ -68,7 +59,7 @@
                 </div>
             </div>
             <div style="margin-top: 50px">
-                <van-button round block type="info" @click="submit" native-type="submit">保 存</van-button>
+                <van-button round block type="primary" @click="submit" native-type="submit">保 存</van-button>
             </div>
         </div>
 
@@ -195,25 +186,7 @@ export default {
 	},
 };
 </script>
-<style>
-.person_box .van-button--info {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
-}
-.person_box .van-radio-group {
-	display: flex;
-	padding: 15px;
-	justify-content: center;
-}
-.person_box .van-radio {
-	margin-right: 20px;
-}
-.person_box .van-popup--bottom{
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-</style>
+
 <style lang="less" scoped>
 .form {
 	padding: 0 15px;

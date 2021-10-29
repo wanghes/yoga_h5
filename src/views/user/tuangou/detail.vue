@@ -84,7 +84,7 @@
         </div>
         <div class="detail_info"></div>
         <div class="btn">
-            <van-button :disabled="detail.status==0" class="right_btn" block type="info" @click="sSubmit" native-type="submit">
+            <van-button :disabled="detail.status==0" block type="primary" @click="sSubmit" native-type="submit">
                 <span v-if="detail.status==1">立即抢购</span>
                 <span v-else>活动已经结束</span>
             </van-button>
@@ -289,12 +289,7 @@ export default {
 	},
 };
 </script>
-<style>
-.tuangou_detail .van-button--info {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
-}
-</style>
+
 <style lang="less" scoped>
 .btn {
 	position: fixed;

@@ -18,7 +18,7 @@
 				<div class="intro">{{info.adress}} {{info.traffic}}</div>
 			</div>
 			<div class="btn_wrap">
-				<van-button type="danger" @click="jump" block round>请在PC端进入我的后台管理</van-button>
+				<van-button type="primary" @click="jump" block round>请在PC端进入我的后台管理</van-button>
 			</div>
 			
         </div>
@@ -76,13 +76,7 @@ export default {
 	},
 };
 </script>
-<style>
-.admin .van-button--danger {
-    color: #fff;
-    background-color: #FF5926;
-    border: 1px solid #FF5926;
-}
-</style>
+
 <style lang="less" scoped>
 .admin {
 	width: 100%;

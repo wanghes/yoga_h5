@@ -110,18 +110,6 @@ export default {
 };
 </script>
 
-<style>
-.admin_order .van-tabs__nav--card {
-	margin: 0;
-}
-.admin_order .van-cell2 {
-	padding: 0;
-}
-.admin_order .van-image img{    
-    width: 100px;
-    height: 60px;
-}
-</style>
 <style lang="less" scoped>
 .admin_order {
 	padding: 15px;

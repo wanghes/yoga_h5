@@ -5,7 +5,7 @@
             <div class="text">恭喜您密码找回成功！ 请立即登录吧</div>
         </div>
         <div>
-            <van-button round block type="info" @click="toLogin">立即登录</van-button>
+            <van-button round block type="primary" @click="toLogin">立即登录</van-button>
             <van-divider />
             <van-button round block @click="toHome">随便看看</van-button>
         </div>
@@ -38,12 +38,6 @@ export default {
 };
 </script>
 
-<style>
-.success_box .van-button--info {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
-}
-</style>
 <style lang="less" scoped>
 .success_box {
 	padding: 30px;

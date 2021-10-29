@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap list_box">
+    <div class="wrap series_list_box">
         <van-tabs @click="onClick">
             <van-tab v-for="item in channels" :title="item.name" :name="item.id" :key="item.id">
                 <div class="box">
@@ -109,25 +109,10 @@ export default {
 		},
 	},
 };
-</script>
-            
-<style>
-.list_box .van-tabs--line .van-tabs__wrap {
-	border-bottom: 1px solid #e9e9e9;
-}
-.list_box .van-tabs__line {
-	background-color: #ff5927;
-}
-.list_box .van-cell {
-	padding: 15px;
-}
-.list_box .van-image__img {
-	border-radius: 3px !important;
-}
-</style>            
+</script>          
 
 <style lang="less" scoped>
-.list_box {
+.series_list_box {
 	display: flex;
 	flex-direction: column;
 

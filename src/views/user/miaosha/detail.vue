@@ -270,12 +270,7 @@ export default {
 	},
 };
 </script>
-<style>
-.miaosha_detail .van-button--primary {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
-}
-</style>
+
 <style lang="less" scoped>
 .btn {
 	position: fixed;

@@ -41,7 +41,7 @@
                 </van-popup>
             </div>
             <div style="margin-top: 16px">
-                <van-button round block type="info" @click="doRegister" native-type="submit">提交</van-button>
+                <van-button round block type="primary" @click="doRegister" native-type="submit">提交</van-button>
                 <van-divider />
                 <van-button round block @click="toHome">随便看看</van-button>
             </div>
@@ -57,7 +57,6 @@
 <script>
 import yoga_register from "@/assets/img/yoga_register.png";
 import home from "@/assets/img/home.png";
-import head from "@/assets/img/head.png";
 import { cookie } from "@/utils/index";
 const adviser = require("@/api/adviser");
 const user = require("@/api/user");
@@ -104,20 +103,21 @@ export default {
 			const phone = this.phone;
 			if (!phone) {
 				this.$toast({
-					message: "请填写手机号"
+					message: "请填写手机号",
 				});
 				return;
 			}
-			let reg_tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
-			
+			let reg_tel =
+				/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+
 			if (!reg_tel.test(phone)) {
 				this.$toast({
-					message: "请填写正确的手机号"
+					message: "请填写正确的手机号",
 				});
 				return;
 			}
 			this.startReadSeconds();
-		
+
 			let res = await user.getVcode({
 				phone: phone,
 			});
@@ -149,14 +149,14 @@ export default {
 
 			if (!name) {
 				this.$toast({
-					message: "请填写用户姓名"
+					message: "请填写用户姓名",
 				});
 				return;
 			}
 
 			if (!phone) {
 				this.$toast({
-					message: "请填写手机号"
+					message: "请填写手机号",
 				});
 				return;
 			}
@@ -181,7 +181,7 @@ export default {
 			if (res.code == 200) {
 				let { init_password } = res.data;
 				this.$toast({
-					message: "注册成功，正在为您跳转登录..."
+					message: "注册成功，正在为您跳转登录...",
 				});
 				setTimeout(() => {
 					this.$router.replace({
@@ -190,7 +190,7 @@ export default {
 							init_password,
 						},
 					});
-				}, 1000)	
+				}, 1000);
 			}
 		},
 		onConfirm(value) {
@@ -211,17 +211,6 @@ export default {
 	},
 };
 </script>
-<style>
-.register_box .van-button--info {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
-}
-input::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder {
-	color: #646464;
-	font-size: 14px;
-}
-</style>
 
 <style lang="less" scoped>
 .register_box {

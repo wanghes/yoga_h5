@@ -116,14 +116,6 @@ export default {
 };
 </script>
 
-<style>
-.admin_profit .van-tabs__nav--card {
-	margin: 0;
-}
-.admin_profit .van-cell2{
-    padding: 0;
-}
-</style>
 <style lang="less" scoped>
 .admin_profit {
 	padding: 15px;

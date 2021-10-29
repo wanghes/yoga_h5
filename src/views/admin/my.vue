@@ -94,11 +94,7 @@ export default {
 	},
 };
 </script>
-<style>
-.home .van-swipe__indicators {
-	bottom: 140px;
-}
-</style>
+
 <style lang="less" scoped>
 .admin {
 	width: 100%;

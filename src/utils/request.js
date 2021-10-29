@@ -40,7 +40,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         const res = response.data;
-         // console.log(res)
         if (res.code !== 200) {
             if (res.code == 401) {
                 Toast({
@@ -91,7 +90,6 @@ service.interceptors.response.use(
                 message: res.msg || "未知错误，联系管理员",
                 duration: 3 * 1000
             });
-            // console.log(res.msg || 'Error')
             return Promise.reject(error);
         }
     }

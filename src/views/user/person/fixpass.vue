@@ -16,7 +16,7 @@
                     <input v-model="password" placeholder="设定新密码(6位或以上）" type="password" />
                 </div>
                 <div style="margin-top: 50px">
-                    <van-button round block type="info" @click="onSubmit" native-type="submit">提 交</van-button>
+                    <van-button round block type="primary" @click="onSubmit" native-type="submit">提 交</van-button>
                 </div>
             </div>
         </div>
@@ -123,12 +123,7 @@ export default {
 	},
 };
 </script>
-<style>
-.login_box .van-button--info {
-	background-color: #ff5926;
-	border: 1px solid #ff5926;
-}
-</style>
+
 <style lang="less" scoped>
 .login_box {
 	padding: 30px;

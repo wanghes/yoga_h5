@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap list_box">
+    <div class="wrap online_list_box">
         <div class="top">
             <div class="search">
                 <img :src="search" alt="">
@@ -237,35 +237,7 @@ export default {
 	},
 };
 </script>
-            
-<style>
-.list_box .van-tabs__nav--card {
-	margin: 0;
-}
-.list_box .van-tabs__nav--card .van-tab.van-tab--active {
-	color: #fff;
-	background-color: #ff5927;
-}
-.list_box .van-tabs__nav--card {
-	border: none;
-}
-.list_box .van-tabs__nav--card .van-tab {
-	background-color: #f5f5f5;
-	color: #545454;
-	border: none;
-	margin-right: 5px;
-	font-size: 14px;
-	border-radius: 3px;
-	max-width: 30%;
-}
-.list_box .van-tabs__nav--complete {
-	padding: 0;
-}
-.list_box .van-image__img {
-	border-radius: 3px !important;
-}
-</style>            
-
+                      
 <style lang="less" scoped>
 .top {
 	display: flex;
