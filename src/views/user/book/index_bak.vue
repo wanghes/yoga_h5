@@ -6,10 +6,10 @@
         </div>
         <div class="rili">
             <div class="item_wrap" v-for="(item, idx) in rankWeeks" :key="idx" @click="switchDate(item)">
-                <div :class="item.selected ? 'item selected':'item'">
+                <div :class="item.today ? 'item today':'item'">
                     <span>{{item.week}}</span>
                     <strong>{{item.day}}</strong>
-                    <span>{{item.month}}月</span>
+                    <span>{{item.month}}</span>
                 </div>
             </div>
         </div>
@@ -70,10 +70,9 @@
     </div>
 </template>
 <script>
-import { getTimeStamp } from "@/utils/index";
+import { dateFormatYMD, getTimeStamp } from "@/utils/index";
 import { cookie } from "@/utils/index";
 import { Toast } from "vant";
-const moment = require("moment");
 const book = require("@/api/book");
 const card = require("@/api/card");
 const teacherHead = require("@/assets/img/teacher.png");
@@ -84,9 +83,13 @@ export default {
 			teacherHead,
 			activeTab: 1,
 			active: 1,
-			dateValue: moment(),
+			dateValue: new Date(),
 			rankWeeks: [],
 			type: "",
+			date: {
+				start: "",
+				end: "",
+			},
 			tuankeList: [],
 			sijiaoList: [],
 			cards: [],
@@ -95,10 +98,10 @@ export default {
 	mounted() {
 		this.type = this.$route.params.type;
 		if (this.type == 1) {
-			this.rankWeeks = this.getDates();
+			this.rankWeeks = this.getWeekTime();
 			this.fetchTuankeData();
 		} else {
-			this.rankWeeks = this.getDates();
+			this.rankWeeks = this.getWeekTime();
 			this.fetchSijiaoData();
 		}
 	},
@@ -112,24 +115,23 @@ export default {
 				path: "/book/" + type,
 			});
 			this.type = type;
-			this.rankWeeks = this.getDates();
-			
-			if (this.type == 1) {
-				this.tuankeList = [];		
+			this.rankWeeks = this.getWeekTime();
+			if (this.type == 1) {		
 				this.fetchTuankeData();
 			} else {
-				this.sijiaoList = [];
 				this.fetchSijiaoData();
 			}
 		},
 		async fetchTuankeData() {
-			let dateValue = this.dateValue;
+			let start_date = dateFormatYMD(new Date(this.date.start)) + " 00:00:00";
+			let end_date = dateFormatYMD(new Date(this.date.end)) + " 23:59:59";
 			Toast.loading({
 				message: "加载中...",
 				forbidClick: true,
 			});
-			let res = await book.tuanke_list_by_date({
-				date: dateValue.format('YYYY-MM-DD')
+			let res = await book.tuanke_list({
+				start_date,
+				end_date,
 			});
 
 			if (res.code == 200) {
@@ -142,7 +144,7 @@ export default {
 					item.weekDay = timeObj.weekDay;
 					item.guoqi = false;
 					item.can_book = true;
-					if (this.dateValue.millisecond() > item.timeStamp) {
+					if (this.dateValue.getTime() > item.timeStamp) {
 						item.guoqi = true;
 					}
 					if (item.count >= item.p_num) {
@@ -154,13 +156,16 @@ export default {
 			Toast.clear();
 		},
 		async fetchSijiaoData() {
-			let dateValue = this.dateValue
+			let start_date =
+				dateFormatYMD(new Date(this.date.start)) + " 00:00:00";
+			let end_date = dateFormatYMD(new Date(this.date.end)) + " 23:59:59";
 			Toast.loading({
 				message: "加载中...",
 				forbidClick: true,
 			});
-			let res = await book.sijiao_list_by_date({
-				date: dateValue.format('YYYY-MM-DD')
+			let res = await book.sijiao_list({
+				start_date,
+				end_date,
 			});
 
 			if (res.code == 200) {
@@ -173,7 +178,7 @@ export default {
 					item.weekDay = timeObj.weekDay;
 					item.guoqi = false;
 					item.can_book = true;
-					if (this.dateValue.millisecond() > item.timeStamp) {
+					if (this.dateValue.getTime() > item.timeStamp) {
 						item.guoqi = true;
 					}
 					item.p_num = 1;
@@ -186,10 +191,12 @@ export default {
 			}
 			Toast.clear();
 		},
-		getDates() {
-			let arr = [];
-			this.dateValue = moment();
-			const weekCN = [
+
+		formatDate(date) {
+			const month = date.getMonth() + 1 + "月";
+			const day = date.getDate();
+			const dayweek = date.getDay();
+			const week = [
 				"周日",
 				"周一",
 				"周二",
@@ -197,40 +204,56 @@ export default {
 				"周四",
 				"周五",
 				"周六",
-			];
-			for (let i = 0; i < 7; i++) {
-				let selected = i == 0 ? true : false;
-				let date = moment().add(i, 'days');
-				let day = date.date();
-				let weekIndex = parseInt(date.day());
-			
-				let week = weekCN[weekIndex];
-				let month = date.month() + 1;
+			][dayweek];
+			let today = false;
+			var temp = this.dateValue.getDay();
 
-				let item = {
-					date,
-					month,
-					day,
-					selected,
-					week,
-				}
-				arr.push(item)
+			if (temp == dayweek) {
+				today = true;
 			}
-		
-			return arr;
+			return {
+				date,
+				month,
+				day,
+				today,
+				week,
+			};
+		},
+		getWeekTime() {
+			let that = this;
+			var currentFirstDate;
+
+			let addDate = function (date, n) {
+				date.setDate(date.getDate() + n);
+				return date;
+			};
+
+			let setDate = date => {
+				var week = date.getDay() - 1;
+				week = week == -1 ? 6 : week;
+				date = addDate(date, week * -1);
+				currentFirstDate = new Date(date);
+
+				var arr = [];
+				for (var i = 0; i < 7; i++) {
+					var a = this.formatDate(i == 0 ? date : addDate(date, 1)); //星期一开始
+					arr.push(a);
+					if (i == 0) {
+						that.date.start = date.valueOf();
+					}
+
+					if (i == 6) {
+						that.date.end = date.valueOf();
+					}
+				}
+				return arr;
+			};
+			var num = 0;
+			setDate(new Date(this.dateValue.valueOf()));
+			return setDate(addDate(currentFirstDate, 7 * num));
 		},
 		switchDate(item) {
-			this.dateValue = item.date;
-			this.rankWeeks.forEach(it => {
-				it.selected = false;
-			});
-		
-			item.selected = true;
-			if (this.type == 1) {		
-				this.fetchTuankeData();
-			} else {
-				this.fetchSijiaoData();
-			}
+			console.log(item)
 		},
 		async bookAction(schedule_id) {
 			let user_token = cookie.get("user_token");
@@ -412,7 +435,7 @@ export default {
 			font-size: 12px;
 		}
 	}
-	.selected {
+	.today {
 		background-color: #ff5926;
 		color: #fff;
 	}

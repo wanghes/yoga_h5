@@ -20,7 +20,7 @@
                 </div>
                 <div class="item">
                     <label class="label">场馆:</label>
-                    <span class="ground">{{ detail.room_name }}<i>(还可预约{{ p_num - count }}人)</i></span>
+                    <span class="ground">{{ detail.room_name }}<i>(还可预约{{ detail.p_num - detail.count }}人)</i></span>
                 </div>
             </div>
             <div class="right">
@@ -41,7 +41,6 @@
             <van-tabbar-item icon="todo-list-o">约课</van-tabbar-item>
             <van-tabbar-item icon="wap-home-o">我的</van-tabbar-item>
         </van-tabbar>
-        <!-- <van-share-sheet v-model="showShare" title="立即分享给好友" :options="options" @select="onSelect"></van-share-sheet> -->
     </div>
 </template>
 
@@ -59,21 +58,14 @@ export default {
 			teacherHead,
 			share_icon,
 			type: "",
-			p_num: "",
-			count: "",
 			schedule_id: "",
-			detail: {},
-			showShare: false,
-			options: [
-				{ name: "微信", icon: "wechat" },
-				{ name: "朋友圈", icon: "wechat-moments" },
-				{ name: "复制链接", icon: "link" },
-			],
+			detail: {}
 		};
 	},
 	mounted() {
 		let query = this.$route.query;
-		let { type, schedule_id, count, p_num } = query;
+		// type = 1 是团课，否则2是私教课
+		let { type, schedule_id } = query;
 		this.type = type;
 		this.schedule_id = schedule_id;
 		this.fetchData();
@@ -91,7 +83,6 @@ export default {
 					/<img/g,
 					"<img style='max-width:100%; height:auto;'"
 				);
-
 				this.executeWeixin();
 			}
 		},
@@ -100,51 +91,40 @@ export default {
 				url: location.href.split("#")[0],
 			});
 			if (res.code == 200) {
-				let config = res.data;
-				// 微信JSSDK异常处理
 				let that = this;
-
-				wx.error(function (e) {
-					console.log(e);
-				});
+				let config = res.data;
 				wx.config({
 					...config,
 					debug: false,
 				});
+				wx.error(function (e) {
+					console.log(e);
+				});
 				wx.ready(function () {
-					// that.showShare = false;
+					let title = "";
+					let cover = "";
+					if (that.type == 1) {
+						title = that.detail.course_name;
+						cover = that.detail.cover;
+					} else {
+						title = that.detail.teacher_name + "的私教课";
+						cover = that.detail.teacher_avatar;
+					}
+					// link分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
 					wx.updateAppMessageShareData({
-						title:
-							that.type == 1
-								? that.detail.course_name
-								: that.detail.teacher_name + "的私教课", // 分享标题
-						desc: that.detail.des, // 分享描述
-						link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-						imgUrl:
-							that.type == 1
-								? that.detail.cover
-								: that.detail.teacher_avatar, // 分享图标
-						success: function (res) {
-							// console.log(res);
-							// 设置成功
-						},
-						fail(error) {
-							// console.log(error);
-						},
+						title: title, 
+						desc: that.detail.des,
+						link: location.href, 
+						imgUrl: cover,
+						success() {
+						}
 					});
 					wx.updateTimelineShareData({
-						title:
-							that.type == 1
-								? that.detail.course_name
-								: that.detail.teacher_name + "的私教课", // 分享标题
-						link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-						imgUrl:
-							that.type == 1
-								? that.detail.cover
-								: that.detail.teacher_avatar, // 分享图标
-						success: function () {
-							// 设置成功
-						},
+						title:title,
+						link: location.href,
+						imgUrl: cover,
+						success() {
+						}
 					});
 				});
 			}
@@ -197,14 +177,14 @@ export default {
 		shareAction() {
 			this.$toast("请点击右上角三点按钮");
 			wx.showMenuItems({
-				menuList:[
-					'menuItem:share:appMessage',
+				menuList: [
+					"menuItem:share:appMessage",
 					"menuItem:share:timeline",
 					"menuItem:share:qq",
 					"menuItem:share:QZone",
-					"menuItem:copyUrl"
-				]
-			})	
+					"menuItem:copyUrl",
+				],
+			});
 		},
 	},
 };

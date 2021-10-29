@@ -17,8 +17,9 @@
                             <h4 v-else>私教课</h4>
                             <span v-if="item.book_course_type == 1">教练：{{item.tuanke_teacher_name}}</span>
                             <span v-else>教练：{{item.sijiao_teacher_name}}</span>
-                            <span v-if="item.book_course_type == 1">时间：{{item.start_date && item.start_date.slice(0, 10)}} {{item.schedule_start_time}}-{{item.schedule_end_time}} </span>
-                            <span v-else>时间：{{item.date && item.date.slice(0, 10)}} {{item.stc_start_time}}-{{item.stc_end_time}} </span>
+							<span>预约时间：{{item.book_time }} </span>
+                            <span v-if="item.book_course_type == 1">上课时间：{{item.start_date && item.start_date.slice(0, 10)}} {{item.schedule_start_time}}-{{item.schedule_end_time}} </span>
+                            <span v-else>上课时间：{{item.date && item.date.slice(0, 10)}} {{item.stc_start_time}}-{{item.stc_end_time}} </span>
                         </div>
                         <div class="btn">
                             <!-- <button v-if="!item.guoqi" class="yu_btn">取消</button> -->
@@ -45,8 +46,9 @@
                             <h4 v-else>私教课</h4>
                             <span v-if="item.book_course_type == 1">教练：{{item.tuanke_teacher_name}}</span>
                             <span v-else>教练：{{item.sijiao_teacher_name}}</span>
-                            <span v-if="item.book_course_type == 1">时间：{{item.start_date && item.start_date.slice(0, 10)}} {{item.schedule_start_time}}-{{item.schedule_end_time}} </span>
-                            <span v-else>时间：{{item.date && item.date.slice(0, 10)}} {{item.stc_start_time}}-{{item.stc_end_time}} </span>
+							<span>预约时间：{{item.book_time }} </span>
+                            <span v-if="item.book_course_type == 1">上课时间：{{item.start_date && item.start_date.slice(0, 10)}} {{item.schedule_start_time}}-{{item.schedule_end_time}} </span>
+                            <span v-else>上课时间：{{item.date && item.date.slice(0, 10)}} {{item.stc_start_time}}-{{item.stc_end_time}} </span>
                         </div>
                     </div>
                 </div>
@@ -70,8 +72,9 @@
                             <h4 v-else>私教课</h4>
                             <span v-if="item.book_course_type == 1">教练：{{item.tuanke_teacher_name}}</span>
                             <span v-else>教练：{{item.sijiao_teacher_name}}</span>
-                            <span v-if="item.book_course_type == 1">时间：{{item.start_date && item.start_date.slice(0, 10)}} {{item.schedule_start_time}}-{{item.schedule_end_time}} </span>
-                            <span v-else>时间：{{item.date && item.date.slice(0, 10)}} {{item.stc_start_time}}-{{item.stc_end_time}} </span>
+							<span>预约时间：{{item.book_time }} </span>
+                            <span v-if="item.book_course_type == 1">上课时间：{{item.start_date && item.start_date.slice(0, 10)}} {{item.schedule_start_time}}-{{item.schedule_end_time}} </span>
+                            <span v-else>上课时间：{{item.date && item.date.slice(0, 10)}} {{item.stc_start_time}}-{{item.stc_end_time}} </span>
                         </div>
                     </div>
                 </div>
@@ -95,8 +98,9 @@
                             <h4 v-else>私教课</h4>
                             <span v-if="item.book_course_type == 1">教练：{{item.tuanke_teacher_name}}</span>
                             <span v-else>教练：{{item.sijiao_teacher_name}}</span>
-                            <span v-if="item.book_course_type == 1">时间：{{item.start_date && item.start_date.slice(0, 10)}} {{item.schedule_start_time}}-{{item.schedule_end_time}} </span>
-                            <span v-else>时间：{{item.date && item.date.slice(0, 10)}} {{item.stc_start_time}}-{{item.stc_end_time}} </span>
+							<span>预约时间：{{item.book_time }} </span>
+                            <span v-if="item.book_course_type == 1">上课时间：{{item.start_date && item.start_date.slice(0, 10)}} {{item.schedule_start_time}}-{{item.schedule_end_time}} </span>
+                            <span v-else>上课时间：{{item.date && item.date.slice(0, 10)}} {{item.stc_start_time}}-{{item.stc_end_time}} </span>
                         </div>
                         <div class="btn">
                             <!-- <button v-if="!item.guoqi" class="yu_btn">取消</button> -->

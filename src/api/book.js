@@ -1,5 +1,26 @@
 import request from '@/utils/request'
 
+
+
+
+export function tuanke_list_by_date(data) {
+    return request({
+        url: '/index/tuanke/tuanke_list_by_date',
+        method: 'post',
+        data
+    });
+}
+
+
+export function sijiao_list_by_date(data) {
+    return request({
+        url: '/index/sijiao/sijiao_list_by_date',
+        method: 'post',
+        data
+    });
+}
+
+
 export function tuanke_list(params) {
     return request({
         url: '/index/tuanke/list',
