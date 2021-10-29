@@ -12,10 +12,10 @@ module.exports = {
     productionSourceMap: false,
     filenameHashing: true,
     css: {
-        // extract: productionEnv ? {
-        //     filename: `css/[name].${Timestamp}.css`,
-        //     chunkFilename: `css/[name].${Timestamp}.css`,
-        // } : false,
+        extract: productionEnv ? {
+            filename: `css/[name].${Timestamp}.css`,
+            chunkFilename: `css/[name].${Timestamp}.css`,
+        } : false,
         loaderOptions: {
             less: {
                 // 若 less-loader 版本小于 6.0，请移除 lessOptions 这一级，直接配置选项。
