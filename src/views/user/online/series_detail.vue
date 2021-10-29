@@ -95,7 +95,6 @@
 </template>
 
 <script>
-import ke from "@/assets/img/img.png";
 import huo from "@/assets/img/huo.png";
 import { cookie } from "@/utils/index";
 const online = require("@/api/online");
@@ -105,7 +104,6 @@ const wx = require("@/assets/js/jweixin-1.6.0.js");
 export default {
 	data() {
 		return {
-			ke,
             huo,
 			detail: {},
             list:[],

@@ -137,8 +137,6 @@
 import search from "@/assets/img/search.png";
 import zuan from "@/assets/img/zuan2.png";
 import ma from "@/assets/img/ma.png";
-import banner from "@/assets/img/banner2.png";
-import ke from "@/assets/img/ke.png";
 const online = require("@/api/online");
 const focus = require("@/api/focus");
 export default {
@@ -147,8 +145,6 @@ export default {
 			search,
 			zuan,
 			ma,
-			images: [banner, banner],
-			ke,
 			seriesList: [],
 			alonelist: [],
 			jingpins: [],

@@ -26,12 +26,10 @@
     </div>
 </template>
 <script>
-import ke from "@/assets/img/ke.png";
 const online = require("@/api/online");
 export default {
 	data() {
 		return {
-			ke,
 			loading: false,
 			finished: false,
 			list: [],

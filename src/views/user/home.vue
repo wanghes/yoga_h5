@@ -121,8 +121,6 @@
     </div>
 </template>
 <script>
-import banner_01 from "@/assets/img/banner_01.png";
-import banner_02 from "@/assets/img/banner_02.png";
 import btn_01 from "@/assets/img/btn_01.png";
 import btn_02 from "@/assets/img/btn_02.png";
 import btn_03 from "@/assets/img/btn_03.png";
@@ -131,7 +129,6 @@ import btn_05 from "@/assets/img/btn_05.png";
 import btn_06 from "@/assets/img/btn_06.png";
 import btn_07 from "@/assets/img/btn_07.png";
 import btn_08 from "@/assets/img/btn_08.png";
-import guan from "@/assets/img/guan.jpg";
 import s_01 from "@/assets/img/s_01.png";
 import s_02 from "@/assets/img/s_02.png";
 import s_03 from "@/assets/img/s_03.png";
@@ -151,9 +148,7 @@ export default {
 		return {
 			active: 0,
 			teacherHead,
-			banner_02,
 			join_us,
-			banner_01,
 			btns: {
 				btn_01,
 				btn_02,
@@ -204,7 +199,6 @@ export default {
 				s_05,
 				s_06,
 			},
-			guan,
 			venues: {},
 			teachers: [],
 			checkedEnvs: [],

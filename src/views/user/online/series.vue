@@ -39,14 +39,13 @@
         </van-tabs>
     </div>
 </template>
+
 <script>
-import ke from "@/assets/img/ke.png";
 const online = require("@/api/online");
 export default {
 	data() {
 		return {
 			loading: false,
-			ke,
 			finished: false,
 			list: [],
 			channels: [
