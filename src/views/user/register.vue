@@ -179,6 +179,20 @@ export default {
 			});
 
 			if (res.code == 200) {
+				let data = res.data;
+				cookie.set("user_id", data.user_id);
+				cookie.set("user_token", data.token);
+				cookie.set("user_phone", data.phone);
+				cookie.set("user_head", data.head);
+				cookie.set("user_openid", data.openid);
+				cookie.set("user_name", data.name);
+
+				this.$router.push({
+					path: "/",
+				});
+			}
+			/*
+			if (res.code == 200) {
 				let { init_password } = res.data;
 				this.$toast({
 					message: "注册成功，正在为您跳转登录...",
@@ -192,6 +206,7 @@ export default {
 					});
 				}, 1000);
 			}
+			*/
 		},
 		onConfirm(value) {
 			this.adviser_name = value.name;

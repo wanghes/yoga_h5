@@ -21,6 +21,10 @@ if (QueryParams.aid) {
     } else {
         window.venues = QueryParams.aid;
     }   
+    cookie.set('venues_id', window.venues);
+} else {
+    let venues = cookie.get('venues_id');
+    window.venues = venues;
 }
 
 if (QueryCode) {
@@ -186,9 +190,8 @@ router.beforeEach(async (to, from, next) => {
                     crossLogin(OPENID, to, from, next);
                 } else {
                     // http://localhost:8080/?aid=LYK03fc5rP&code=1&type=app
-                    console.log(QueryCode)
                     if (QueryCode == 1) {
-                        console.log("测试中")
+                        Toast('测试中');
                         crossLogin('oz3jNt3hGT_qqdUWFCnxn7_gzjWA', to, from, next);
                         next();
                         return;
