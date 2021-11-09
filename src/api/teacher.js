@@ -8,3 +8,15 @@ export function list(params) {
         params
     });
 }
+
+
+export function list_by_star(params) {
+    return request({
+        url: '/index/teacher/list_by_star',
+        method: 'get',
+        params
+    });
+}
+
+
+

@@ -92,17 +92,23 @@
                 </div>
 
                 <div class="box" v-if="teachers.length > 0">
-                    <div class="item" v-for="item in teachers" :key="item.id">
-                        <img v-if="item.avatar" :src="item.avatar" alt="">
-                        <img v-else :src="teacherHead" alt="">
-                        <div class="inner">
-                            <span class="name">{{item.name}}</span>
-                            <i class="sj" v-if="item.can_alone">(私教)</i>
-                            <div class="zi">
-                                {{item.des}}
-                            </div>
-                        </div>
-                    </div>
+					<van-swipe :loop="false" :width="130" :show-indicators="false">
+						<van-swipe-item v-for="item in teachers" :key="item.id">
+							<div class="item">
+								<img v-if="item.avatar" :src="item.avatar" alt="">
+								<img v-else :src="teacherHead" alt="">
+								<div class="inner">
+									<span class="name">{{item.name}}</span>
+									<!-- <i class="sj" v-if="item.can_alone">(私教)</i> -->
+									<!-- <div class="zi">
+										{{item.des}}
+									</div> -->
+								</div>
+							</div>
+						</van-swipe-item>
+					
+					</van-swipe>
+                  
                 </div>
                 <div v-else>
                     <van-empty description="还没有数据" />
@@ -224,10 +230,7 @@ export default {
 				message: "加载中...",
 				forbidClick: true
 			});
-			let res = await teacher.list({
-				page: 1,
-				pageSize: 3,
-			});
+			let res = await teacher.list_by_star();
 			if (res.code == 200) {
 				this.teachers = res.data;
 			}
@@ -476,25 +479,24 @@ export default {
 		justify-content: space-between;
 		padding: 15px 0;
 		.item {
-			width: 33%;
-			box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-			text-align: center;
-			margin: 0 3px;
+			width: 120px;
+			background-color: aliceblue;
 			:last-child {
 				margin-right: 0;
 			}
 			img {
-				width: 100%;
+				width: 120px;
+				height: 120px;
 			}
 			.inner {
 				padding: 5px 10px 15px;
+				height: 70px;
 				box-sizing: border-box;
 			}
 			.name {
 				font-size: 14px;
-				color: #000;
+				color: #666;
 				margin-top: 10px;
-				font-weight: bold;
 			}
 			.sj {
 				display: block;
